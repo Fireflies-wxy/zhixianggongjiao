@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_service"
+            android:icon="@drawable/icon_service"
+            android:title="附近服务"/>
+
+        <item
+            android:id="@+id/nav_railway"
+            android:icon="@drawable/icon_railway"
+            android:title="地铁查询" />
+
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/icon_setting"
+            android:title="相关设置"
+            />
+
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/icon_feedback"
+            android:title="意见反馈"/>
+
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/icon_about"
+            android:title="关于"/>
+
+
+    </group>
+</menu>
