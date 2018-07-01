@@ -19,7 +19,6 @@ public enum IconFonts implements Icon {
     icon_setting('\ue6e8'),
     icon_about('\ue619'),
     icon_feedback('\ue660'),
-<<<<<<< HEAD:bnrcsdk/src/main/java/com/bnrc/bnrcsdk/ui/icon/IconFonts.java
     icon_share('\ue60a'),
     icon_modify('\ue612'),
     icon_map('\ue613'),
@@ -32,10 +31,6 @@ public enum IconFonts implements Icon {
     icon_final('\ue607'),
     icon_rightarrow('\ue60d'),
     icon_downarrow('\ue623');
-=======
-    icon_share('\ue609'),
-    icon_modify('\ue612');
->>>>>>> 72824f31db34fc4d890c5e805905c7a4aeac3174:app/src/main/java/com/bnrc/bnrcbus/icon/IconFonts.java
 
 
     private char character;
