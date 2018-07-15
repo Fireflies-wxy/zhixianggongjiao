@@ -8,8 +8,9 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.bnrc.bnrcbus.R;
+import com.bnrc.bnrcbus.activity.base.BaseActivity;
 
-public class ArActivity extends AppCompatActivity {
+public class ArActivity extends BaseActivity {
 
     private TextView mTextView;
 

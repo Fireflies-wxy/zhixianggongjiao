@@ -37,6 +37,7 @@
         android:textSize="14sp" />
 
     <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/share_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

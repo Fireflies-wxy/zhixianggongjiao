@@ -7,8 +7,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bnrc.bnrcbus.R;
+import com.bnrc.bnrcbus.activity.base.BaseActivity;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
+public class RegisterActivity extends BaseActivity implements View.OnClickListener{
 
     private TextView btn_sign_up;
     private TextView tv_link_sign_in;

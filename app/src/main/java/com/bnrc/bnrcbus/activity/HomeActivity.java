@@ -28,6 +28,9 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
+
+
 
 /**
  * 创建首页及其他fragment
@@ -67,6 +70,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     private IconTextView icon_menu;
 
     private CircleImageView user_icon;
+
+    //分享图标
+    private TextView icon_share;
 
 
     @Override
@@ -117,6 +123,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
         user_icon = findViewById(R.id.icon_user);
         user_icon.setOnClickListener(this);
+
+        icon_share = findViewById(R.id.share_image_view);
+        icon_share.setOnClickListener(this);
     }
 
     private void initFragments(){
@@ -213,6 +222,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                         LoginActivity.class);
                 startActivity(loginIntent);
                 break;
+            case R.id.share_image_view:
+                showShare();
 
         }
 
@@ -220,6 +231,34 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
     public void openDrawerLayout(View view){
         mDrawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
+        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+        oks.setTitle(getString(R.string.share));
+        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+        oks.setTitleUrl("http://app.mi.com/details?id=com.bnrc.busapp&ref=search");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("智享公交app，智能出行靠谱助手！\n下载地址：http://app.mi.com/details?id=com.bnrc.busapp&ref=search");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        oks.setImagePath("http://file.market.xiaomi.com/thumbnail/PNG/l114/AppStore/07eab64b6d2d448020c25697708eef0e7aed08009");//确保SDcard下面存在此张图片
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl("http://app.mi.com/details?id=com.bnrc.busapp&ref=search");
+        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+        oks.setComment("我是测试评论文本");
+        // site是分享此内容的网站名称，仅在QQ空间使用
+        oks.setSite(getString(R.string.app_name));
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl("http://sharesdk.cn");
+
+        // 启动分享GUI
+        oks.show(this);
     }
 
 }

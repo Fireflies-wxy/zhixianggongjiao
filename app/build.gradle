@@ -1,11 +1,10 @@
 apply plugin: 'com.android.application'
 
-
 android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.bnrc.bnrcbus"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -17,7 +16,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+//    configurations{
+//        all*.exclude group:'com.squareup.okio', module:'okio'
+//    }
 }
+
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -29,21 +32,23 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':bnrcsdk')
-
-
     //网络请求框架
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-
     //RecyclerView
     implementation 'com.android.support:recyclerview-v7:27.1.1'
-
     //volley
     implementation 'com.mcxiaoke.volley:library:1.0.19'
-
     //base64加密
     compile files('libs/bcprov-jdk16-146.jar')
-
     //json转xml
     compile files('libs/android-xml-json.jar')
-
+    implementation files('libs/MobCommons-2018.0704.1311.jar')
+    implementation files('libs/MobTools-2018.0704.1157.jar')
+    implementation files('libs/ShareSDK-Core-3.2.0.jar')
+    implementation files('libs/ShareSDK-Email-3.2.0.jar')
+    implementation files('libs/ShareSDK-QQ-3.2.0.jar')
+    implementation files('libs/ShareSDK-ShortMessage-3.2.0.jar')
+    implementation files('libs/ShareSDK-SinaWeibo-3.2.0.jar')
+    implementation files('libs/SDKWrapper-2018.0201.1609.jar')
+    implementation files('libs/ShareSDK-QZone-3.2.0.jar')
 }

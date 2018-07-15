@@ -292,8 +292,7 @@ public class NearFragment extends BaseFragment {
                         if (addr != null && addr.length() > 0)
                             position = addr;
                     }
-                    Toast.makeText(mContext, position, Toast.LENGTH_SHORT)
-                            .show();
+                    //Toast.makeText(mContext, position, Toast.LENGTH_SHORT).show();
                     mNearExplistview.stopRefresh();
                 }
             }, 1000);
@@ -1171,7 +1170,7 @@ public class NearFragment extends BaseFragment {
                     position = addr;
             }
             Log.i("Test position",position);
-            Toast.makeText(mContext, position, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, position, Toast.LENGTH_SHORT).show();
         }
 
     }

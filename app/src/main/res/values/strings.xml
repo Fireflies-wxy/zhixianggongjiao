@@ -10,6 +10,8 @@
     <string name="buscircle_image_view_text">公交圈</string>
     <string name="message_image_view_text">消息</string>
 
+    <string name="share">快来下载《智享公交》应用吧</string>
+
     <string name="text_near">附近站点</string>
     <string name="text_collect">收藏线路</string>
     <string name="text_concern">提醒线路</string>

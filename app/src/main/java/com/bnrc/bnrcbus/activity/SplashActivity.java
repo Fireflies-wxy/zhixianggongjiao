@@ -6,8 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.bnrc.bnrcbus.R;
+import com.bnrc.bnrcbus.activity.base.BaseActivity;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
     private int TIME = 1;  //3秒
 
