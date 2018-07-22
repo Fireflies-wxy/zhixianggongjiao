@@ -24,5 +24,7 @@
     <string name="startTime">首班车：%s</string>
     <string name="endTime">末班车：%s</string>
 
+    <string name="please_wait">加载中...</string>
+
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
 </resources>

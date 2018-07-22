@@ -11,8 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class RequestParams {
 
-    public ConcurrentHashMap<String, String> urlParams = new ConcurrentHashMap<String, String>();
-    public ConcurrentHashMap<String, Object> fileParams = new ConcurrentHashMap<String, Object>();
+    public ConcurrentHashMap<String, String> urlParams = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, Object> fileParams = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, Integer> userParams = new ConcurrentHashMap<>();
 
     public RequestParams() {
         this((Map<String, String>) null);
@@ -40,6 +41,12 @@ public class RequestParams {
         }
     }
 
+    public void put(String key, int value) {
+        if (key != null) {
+            userParams.put(key, value);
+        }
+    }
+
     public void put(String key, Object object) throws FileNotFoundException {
 
         if (key != null) {
@@ -48,7 +55,7 @@ public class RequestParams {
     }
 
     public boolean hasParams() {
-        if(urlParams.size() > 0 || fileParams.size() > 0){
+        if(urlParams.size() > 0 || fileParams.size() > 0 ||userParams.size()>0){
 
             return true;
         }

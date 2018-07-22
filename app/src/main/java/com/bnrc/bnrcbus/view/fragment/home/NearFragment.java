@@ -121,47 +121,6 @@ public class NearFragment extends BaseFragment {
         mContext = getActivity();
     }
 
-    private SwipeMenuExpandableListView.OnGroupExpandListener mOnGroupExpandListener = new SwipeMenuExpandableListView.OnGroupExpandListener() {
-
-        int lastGroupPos = 0;
-
-        @Override
-        public void onGroupExpand(int pos) {
-            if (mNearAdapter.getChildrenCount(pos) > 0) {
-            } else {
-                // 启动StationListView的activity nearadapter line389
-                Group group = mNearGroups.get(pos);
-                Intent stationIntent = new Intent(mContext,
-                        StationListView.class);
-                stationIntent.putExtra("StationName", group.getStationName());
-                stationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(stationIntent);
-                AnimationUtil.activityZoomAnimation(mContext);
-            }
-        }
-    };
-
-    private SwipeMenuExpandableListView.OnChildClickListener mOnChildExpandListener = new SwipeMenuExpandableListView.OnChildClickListener() {
-
-        @Override
-        public boolean onChildClick(ExpandableListView paramExpandableListView,
-                                    View paramView, int paramInt1, int paramInt2, long paramLong) {
-            // TODO Auto-generated method stub
-            Group group = mNearGroups.get(paramInt1);
-            Child child = group.getChildItem(paramInt2);
-            Intent intent = new Intent(mContext, BuslineListViewParallel.class);
-            intent.putExtra("LineID", child.getLineID());
-            intent.putExtra("StationID", child.getStationID());
-            intent.putExtra("FullName", child.getLineFullName());
-            intent.putExtra("Sequence", child.getSequence());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mContext.startActivity(intent);
-            AnimationUtil.activityZoomAnimation(mContext);
-            return false;
-        }
-
-    };
-
     private SwipeMenuCreator mMenuCreator = new SwipeMenuCreator() {
         @Override
         public void create(SwipeMenu menu) {
@@ -185,22 +144,6 @@ public class NearFragment extends BaseFragment {
                     menu.addMenuItem(item2);
                     break;
             }
-        }
-    };
-    private SwipeMenuExpandableListView.OnMenuItemClickListener mMenuItemClickListener = new SwipeMenuExpandableListView.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(int groupPosition, int childPosition,
-                                       SwipeMenu menu, int index) {
-
-            if (groupPosition < mNearGroups.size() && groupPosition >= 0) {
-                List<Child> children = mNearGroups.get(groupPosition)
-                        .getChildren();
-                if (childPosition < children.size() && childPosition >= 0) {
-                    Child child = children.get(childPosition);
-                    mChooseListener.onPopClick(child);
-                }
-            }
-            return false;
         }
     };
 
@@ -292,7 +235,7 @@ public class NearFragment extends BaseFragment {
                         if (addr != null && addr.length() > 0)
                             position = addr;
                     }
-                    //Toast.makeText(mContext, position, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, position, Toast.LENGTH_SHORT).show();
                     mNearExplistview.stopRefresh();
                 }
             }, 1000);
@@ -735,8 +678,6 @@ public class NearFragment extends BaseFragment {
 					JSONObject rootJson = responseJson.getJSONObject("root");
 					int status = rootJson.getInt("status");
 					if (status != 200) {
-						// Log.i(TAG, child.getBuslineFullName()
-						// + " 暂无实时公交信息");
 						if (child != null) {
 							Map<String, String> showText = new HashMap<String, String>();
 							if (sequence == 1) {

@@ -2,6 +2,7 @@ package com.bnrc.bnrcbus.network;
 
 import com.bnrc.bnrcbus.module.bus.BusModel;
 import com.bnrc.bnrcbus.module.bus.ErrorBusModel;
+import com.bnrc.bnrcbus.module.user.RegisterInfo;
 import com.bnrc.bnrcbus.module.version.VersionModel;
 import com.bnrc.bnrcsdk.okhttp.CommonOkHttpClient;
 import com.bnrc.bnrcsdk.okhttp.listener.DisposeDataHandler;
@@ -54,6 +55,15 @@ public class RequestCenter {
 
     public static void requestErrorBusData(DisposeDataListener listener,String URL) {
         RequestCenter.dealGetRequest(URL, null, listener, ErrorBusModel.class);
+    }
+
+    public static void register(String uid,DisposeDataListener listener) {
+        RequestParams params = new RequestParams();
+
+        params.put("uid",uid);
+        params.put("usertype","1"); //暂定为0，以后添加QQ、微博
+
+        RequestCenter.dealPostRequest(HttpConstants.REGISTER_URL,params,listener, RegisterInfo.class);
     }
 
 }

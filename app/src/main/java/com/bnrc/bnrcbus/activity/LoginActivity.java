@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bnrc.bnrcbus.R;
+import com.bnrc.bnrcbus.network.RequestCenter;
 
 import java.util.HashMap;
 
@@ -155,6 +156,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onCancel(Platform platform, int i) {
         Log.i(TAG,"取消授权");
     }
+
 
 
 }

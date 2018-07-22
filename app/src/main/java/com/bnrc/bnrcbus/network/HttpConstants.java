@@ -29,5 +29,6 @@ public class HttpConstants {
     public static final String VERSION_URL = ROOT_URL + "/api/v1/version";// 请求数据库版本号
     public static final String BEIJINGDB_URL = ROOT_URL + "/api/v1/download";// 更新数据库
     public static final String POSTCOLLECTMESSAGE_URL = ROOT_URL + "/api/v1/collect";
+    public static final String REGISTER_URL = ROOT_URL + "/api/v1/register";
 
 }

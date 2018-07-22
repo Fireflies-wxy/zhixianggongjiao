@@ -118,9 +118,9 @@ public class CommonJsonCallback implements Callback {
 
         try {
             JSONObject result = new JSONObject(responseObj.toString());
-            if(result.has(RESULT_CODE)){
-                mListener.onSuccess(result); //如果返回码有errorcode，直接处理JSONObject
-            }else{
+//            if(result.has(RESULT_CODE)){
+//                mListener.onSuccess(result); //如果返回码有errorcode，直接处理JSONObject
+//            }else{
                 if (mClass == null) {
                     mListener.onSuccess(result); //不需要将json转换为实体对象
                 } else { //需要转化json
@@ -131,7 +131,7 @@ public class CommonJsonCallback implements Callback {
                         mListener.onFailure(new OkHttpException(JSON_ERROR, EMPTY_MSG));
                     }
                 }
-            }
+         //   }
 
         } catch (Exception e) {
             mListener.onFailure(new OkHttpException(OTHER_ERROR, e.getMessage()));

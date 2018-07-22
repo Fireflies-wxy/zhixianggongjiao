@@ -53,7 +53,7 @@
             android:layout_marginBottom="20dp"
             android:src="@drawable/nav_icon" />
 
-        <!--姓名-->
+        <!--用户名-->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,37 +69,37 @@
                 tools:ignore="HardcodedText" />
         </android.support.design.widget.TextInputLayout>
 
-        <!--密码-->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
+        <!--&lt;!&ndash;密码&ndash;&gt;-->
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:layout_marginTop="8dp">-->
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edit_sign_up_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="密码"
-                android:inputType="textPassword"
-                tools:ignore="HardcodedText" />
-        </android.support.design.widget.TextInputLayout>
+            <!--<android.support.design.widget.TextInputEditText-->
+                <!--android:id="@+id/edit_sign_up_password"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="密码"-->
+                <!--android:inputType="textPassword"-->
+                <!--tools:ignore="HardcodedText" />-->
+        <!--</android.support.design.widget.TextInputLayout>-->
 
-        <!--重复密码-->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
+        <!--&lt;!&ndash;重复密码&ndash;&gt;-->
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:layout_marginTop="8dp">-->
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edit_sign_up_re_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="重复密码"
-                android:inputType="textPassword"
-                tools:ignore="HardcodedText" />
-        </android.support.design.widget.TextInputLayout>
+            <!--<android.support.design.widget.TextInputEditText-->
+                <!--android:id="@+id/edit_sign_up_re_password"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="重复密码"-->
+                <!--android:inputType="textPassword"-->
+                <!--tools:ignore="HardcodedText" />-->
+        <!--</android.support.design.widget.TextInputLayout>-->
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_sign_up"
