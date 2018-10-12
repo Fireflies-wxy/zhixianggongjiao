@@ -10,7 +10,7 @@ public enum IconFonts implements Icon {
     icon_home('\ue642'),
     icon_route('\ue61b'),
     icon_ar('\ue8f0'),
-    icon_buscircle('\ue67e'),
+    icon_buscircle('\ue6b4'),
     icon_message('\ue625'),
     icon_menu('\ue652'),
     icon_search('\ue63c'),
@@ -30,7 +30,8 @@ public enum IconFonts implements Icon {
     icon_bus('\ue609'),
     icon_final('\ue607'),
     icon_rightarrow('\ue60d'),
-    icon_downarrow('\ue623');
+    icon_downarrow('\ue623'),
+    icon_status('\ue6b4');
 
 
     private char character;

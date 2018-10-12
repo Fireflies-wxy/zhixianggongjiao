@@ -46,7 +46,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     private RTabHost mTabHost;
     private int mLastIndex = 0;  //初始化时默认加载第一项"首页"
     private TextView tv_toolbar;
-    private String[] titleList = {"等车来","路线","公交圈","消息"};
+    private String[] titleList = {"等车来","路线","线路/车况评论","消息"};
 
     private HomeFragment mHomeFragment;
     private RouteFragment mRouteFragment;

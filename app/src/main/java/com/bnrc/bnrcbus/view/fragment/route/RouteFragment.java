@@ -1,12 +1,17 @@
 package com.bnrc.bnrcbus.view.fragment.route;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bnrc.bnrcbus.R;
 import com.bnrc.bnrcbus.view.fragment.BaseFragment;
@@ -16,6 +21,7 @@ import com.bnrc.bnrcbus.view.fragment.BaseFragment;
  */
 
 public class RouteFragment extends BaseFragment {
+
 
     private View mContentView;
     private TextView mTextView;
@@ -33,4 +39,12 @@ public class RouteFragment extends BaseFragment {
         mTextView = mContentView.findViewById(R.id.tv_route);
         mTextView.setText("route");
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 }
+
+

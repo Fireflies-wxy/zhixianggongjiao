@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
-                android:text="@string/buscircle_image_view_text"
+                android:text="@string/status_image_view_text"
                 android:textSize="12sp"
                 android:textColor="@drawable/page_tab_text" />
 

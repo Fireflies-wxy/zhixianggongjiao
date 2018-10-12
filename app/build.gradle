@@ -38,6 +38,8 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     //volley
     implementation 'com.mcxiaoke.volley:library:1.0.19'
+    //星级评分框架
+    implementation 'com.github.CB-ysx:CBRatingBar:3.0.0'
     //base64加密
     compile files('libs/bcprov-jdk16-146.jar')
     //json转xml

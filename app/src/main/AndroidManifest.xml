@@ -92,6 +92,15 @@
         <activity android:name=".activity.SettingView" />
         <activity android:name=".activity.SearchBuslineView" />
 
+        <receiver android:name=".MyBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.fireflies.broadcastsender.STILL"/>
+            </intent-filter>
+        </receiver>
+
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
