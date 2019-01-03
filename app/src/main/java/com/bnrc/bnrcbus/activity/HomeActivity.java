@@ -1,7 +1,10 @@
 package com.bnrc.bnrcbus.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,6 +41,9 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
+    private final static int REQUEST_CAMERA_PERMISSIONS_CODE = 11;
+    public static final int REQUEST_LOCATION_PERMISSIONS_CODE = 0;
+
     private FragmentManager fm;
     private List<BaseFragment> fragmentList = new ArrayList<BaseFragment>();
     private BaseFragment mFragment;
@@ -47,11 +53,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     private int mLastIndex = 0;  //初始化时默认加载第一项"首页"
     private TextView tv_toolbar;
     private String[] titleList = {"等车来","路线","线路/车况评论","消息"};
-
-    private HomeFragment mHomeFragment;
-    private RouteFragment mRouteFragment;
-    private BusCircleFragment mBusCircleFragment;
-    private MessageFragment mMessageFragment;
 
     private RelativeLayout mHomeLayout;
     private RelativeLayout mRouteLayout;
@@ -84,13 +85,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         initView();
         initFragments();
         initTabHost();
-
-        //添加默认要显示的fragment
-//        mHomeFragment = new HomeFragment();
-//        fm = getFragmentManager();
-//        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-//        fragmentTransaction.replace(R.id.content_layout,mHomeFragment);
-//        fragmentTransaction.commit();
     }
 
     private void initView(){
@@ -213,9 +207,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
         switch(view.getId()){
             case R.id.ar_layout_view:
-                Intent subwayIntent = new Intent(HomeActivity.this,
+                Intent arIntent = new Intent(HomeActivity.this,
                         ArActivity.class);
-                startActivity(subwayIntent);
+                startActivity(arIntent);
                 break;
             case R.id.icon_user:
                 Intent loginIntent = new Intent(HomeActivity.this,
