@@ -77,8 +77,8 @@
         </activity>
 
         <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.ArActivity" />
         <activity android:name=".activity.base.BaseActivity" />
-        <activity android:name=".activity.ar.ArActivity" />
         <activity
             android:name=".activity.LoginActivity"
             android:launchMode="singleInstance" />

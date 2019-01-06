@@ -8,14 +8,12 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.opengl.Matrix;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
-
+import com.baidu.location.BDLocation;
 import com.bnrc.bnrcbus.R;
-import com.bnrc.bnrcbus.util.LocationHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +26,7 @@ public class AROverlayView extends View {
 
     Context context;
     private float[] rotatedProjectionMatrix = new float[16];
-    private Location currentLocation;
+    private BDLocation currentLocation;
     private List<ARPoint> arPoints;
 
 
@@ -49,7 +47,7 @@ public class AROverlayView extends View {
         this.invalidate();
     }
 
-    public void updateCurrentLocation(Location currentLocation){
+    public void updateCurrentLocation(BDLocation currentLocation){
         this.currentLocation = currentLocation;
         this.invalidate();
     }

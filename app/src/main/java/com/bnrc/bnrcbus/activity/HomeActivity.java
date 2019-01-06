@@ -1,10 +1,7 @@
 package com.bnrc.bnrcbus.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bnrc.bnrcbus.R;
-import com.bnrc.bnrcbus.activity.ar.ArActivity;
 import com.bnrc.bnrcbus.activity.base.BaseActivity;
 import com.bnrc.bnrcbus.view.fragment.BaseFragment;
 import com.bnrc.bnrcbus.view.fragment.buscircle.BusCircleFragment;

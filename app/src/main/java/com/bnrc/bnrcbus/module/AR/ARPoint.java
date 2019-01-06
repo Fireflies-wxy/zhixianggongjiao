@@ -1,22 +1,24 @@
 package com.bnrc.bnrcbus.module.AR;
 
-import android.location.Location;
+import com.baidu.location.BDLocation;
 
-
+/**
+ * Created by ntdat on 1/16/17.
+ */
 
 public class ARPoint {
-    Location location;
+    BDLocation location;
     String name;
 
     public ARPoint(String name, double lat, double lon, double altitude) {
         this.name = name;
-        location = new Location("ARPoint");
+        location = new BDLocation("ARPoint");
         location.setLatitude(lat);
         location.setLongitude(lon);
         location.setAltitude(altitude);
     }
 
-    public Location getLocation() {
+    public BDLocation getLocation() {
         return location;
     }
 
