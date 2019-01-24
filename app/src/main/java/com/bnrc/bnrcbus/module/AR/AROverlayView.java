@@ -10,9 +10,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.opengl.Matrix;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.baidu.location.BDLocation;
+import com.baidu.mapapi.search.core.PoiInfo;
+import com.baidu.mapapi.search.poi.PoiResult;
 import com.bnrc.bnrcbus.R;
 
 import java.util.ArrayList;
@@ -28,6 +33,7 @@ public class AROverlayView extends View {
     private float[] rotatedProjectionMatrix = new float[16];
     private BDLocation currentLocation;
     private List<ARPoint> arPoints;
+    private FrameLayout mContainer;
 
 
     public AROverlayView(Context context) {
@@ -35,11 +41,33 @@ public class AROverlayView extends View {
 
         this.context = context;
 
+        mContainer = findViewById(R.id.camera_container_layout);
+
+        LayoutInflater inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View view  = inflater.inflate(R.layout.poitag_layout,null);
+
+        mContainer.addView(view);
+
+
+
+//        POITag poiTag = new POITag(context);
+//        poiTag.setX(500);
+//        poiTag.setY(500);
+
         //Demo points
-        arPoints = new ArrayList<ARPoint>() {{
-            add(new ARPoint("KLPAC", 3.1850, 101.6868, 0));
-            add(new ARPoint("Twin Tower", 3.1579, 101.7116, 0));
-        }};
+//        arPoints = new ArrayList<ARPoint>() {{
+//            add(new ARPoint("KLPAC", 3.1850, 101.6868, 0));
+//            add(new ARPoint("Twin Tower", 3.1579, 101.7116, 0));
+//        }};
+    }
+
+    public void updatePoiResult(PoiResult poiResult){
+        arPoints = new ArrayList<>();
+        for(PoiInfo poi:poiResult.getAllPoi()){
+            arPoints.add(new ARPoint(poi.getName(),poi.location.latitude,poi.location.longitude,0));
+        }
+        this.invalidate();
     }
 
     public void updateRotatedProjectionMatrix(float[] rotatedProjectionMatrix) {
@@ -56,7 +84,7 @@ public class AROverlayView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (currentLocation == null) {
+        if (currentLocation == null || arPoints == null) {
             return;
         }
 
@@ -66,6 +94,12 @@ public class AROverlayView extends View {
         paint.setColor(Color.WHITE);
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
         paint.setTextSize(60);
+
+//        POITag poiTag = new POITag(context);
+//        poiTag.setX(500);
+//        poiTag.setY(500);
+
+        Log.i("poiresultinfo", "onDraw invoked");
 
         for (int i = 0; i < arPoints.size(); i ++) {
             float[] currentLocationInECEF = LocationHelper.WSG84toECEF(currentLocation);
@@ -81,24 +115,16 @@ public class AROverlayView extends View {
                 float x  = (0.5f + cameraCoordinateVector[0]/cameraCoordinateVector[3]) * canvas.getWidth();
                 float y = (0.5f - cameraCoordinateVector[1]/cameraCoordinateVector[3]) * canvas.getHeight();
 
-                Drawable d = null;
-
-                if(arPoints.get(i).getName().equals("KLPAC"))
-                {
-                    d = ContextCompat.getDrawable(context, R.drawable.klpac);
-                }
-                else
-                {
-                    d = ContextCompat.getDrawable(context, R.drawable.twin_tower);
-                }
-
-                Bitmap myBitmap = ((BitmapDrawable)d).getBitmap();
-
-
-                canvas.drawBitmap(myBitmap, x - (30 * arPoints.get(i).getName().length() / 2), y - 80, paint);
-                //canvas.drawCircle(x, y, radius, paint);
-                canvas.drawText(arPoints.get(i).getName(), x - (30 * arPoints.get(i).getName().length() / 2), y - 80, paint);
-
+//                Drawable d = null;
+//
+//                d = ContextCompat.getDrawable(context, R.drawable.poi_drawable);
+//
+//                Bitmap myBitmap = ((BitmapDrawable)d).getBitmap();
+//
+//
+//                canvas.drawBitmap(myBitmap, x - (30 * arPoints.get(i).getName().length() / 2), y - 80, paint);
+//                //canvas.drawCircle(x, y, radius, paint);
+//                canvas.drawText(arPoints.get(i).getName(), x - (30 * arPoints.get(i).getName().length() / 2), y - 80, paint);
 
             }
         }

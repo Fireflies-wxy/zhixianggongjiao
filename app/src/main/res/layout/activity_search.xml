@@ -15,13 +15,13 @@
         android:padding="10dp">
 
         <com.joanzapata.iconify.widget.IconTextView
-            android:id="@+id/search_menu_view"
+            android:id="@+id/search_back_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:text="{icon-menu}"
+            android:text="{icon-back}"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:padding="5dp"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
-            android:text="线路/站点搜索"
+            android:text="附近搜索"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </RelativeLayout>
@@ -49,8 +49,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/search_top_background" >
+        android:layout_height="50dp"
+        android:background="@drawable/search_top_background">
 
         <Button
             android:id="@+id/btn_search"
@@ -59,9 +59,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:background="@drawable/search_btn_background"
             android:text="搜索"
-            android:textColor="@color/black" />
+            android:textColor="@color/gray_black"
+            android:background="@drawable/search_btn_background"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -69,7 +69,8 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/btn_search"
             android:focusable="true"
-            android:focusableInTouchMode="true" >
+            android:focusableInTouchMode="true"
+            android:background="@drawable/search_top_background">
 
             <EditText
                 android:id="@+id/edt_input"
@@ -77,16 +78,16 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/search_frame"
-                android:hint="点击搜索 线路 或 站点"
+                android:hint="搜索周边任意地点/站点/线路"
                 android:paddingLeft="40dp"
                 android:singleLine="true"
-                android:textSize="18dp" />
+                android:textSize="18dp"
+                android:background="@drawable/search_frame"/>
 
             <ImageView
                 android:id="@+id/iv_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
@@ -136,7 +137,7 @@
                 android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:hint="没有搜索历史"
-                android:textSize="35sp" />
+                android:textSize="30sp" />
         </RelativeLayout>
     </FrameLayout>
 

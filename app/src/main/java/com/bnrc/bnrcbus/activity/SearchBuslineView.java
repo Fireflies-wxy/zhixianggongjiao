@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,8 +30,6 @@ import com.bnrc.bnrcbus.util.database.PCDataBaseHelper;
 import com.bnrc.bnrcbus.util.database.PCUserDataDBHelper;
 import com.bnrc.bnrcsdk.util.AnimationUtil;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +50,7 @@ public class SearchBuslineView extends BaseActivity implements ItemDelListener {
 	private List<historyItem> mHistory;
 	private RelativeLayout mAdContainer;
 
-	private TextView tv_search_title,search_menu_view;
+	private TextView tv_search_title, search_back_view;
 
 	private View footerView;
 
@@ -81,15 +78,11 @@ public class SearchBuslineView extends BaseActivity implements ItemDelListener {
 		mSearchListView.setAdapter(mListViewAdapter);
 
 		tv_search_title = findViewById(R.id.tv_search_title);
-		search_menu_view = findViewById(R.id.search_menu_view);
-		search_menu_view.setOnClickListener(new OnClickListener() {
+		search_back_view = findViewById(R.id.search_back_view);
+		search_back_view.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				switch (view.getId()){
-					case R.id.busline_menu_view:
 						finish();
-						break;
-				}
 			}
 		});
 		loadHistoryData();

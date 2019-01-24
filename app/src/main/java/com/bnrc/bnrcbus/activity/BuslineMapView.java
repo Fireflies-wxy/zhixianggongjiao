@@ -343,8 +343,8 @@ public class BuslineMapView extends BaseActivity implements
 	public void onGetPoiResult(PoiResult result) {
 
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-			Toast.makeText(BuslineMapView.this, "抱歉，未找到结果", Toast.LENGTH_LONG)
-					.show();
+//			Toast.makeText(BuslineMapView.this, "抱歉，未找到结果", Toast.LENGTH_LONG)
+//					.show();
 			return;
 		}
 		// 遍历所有poi，找到类型为公交线路的poi
