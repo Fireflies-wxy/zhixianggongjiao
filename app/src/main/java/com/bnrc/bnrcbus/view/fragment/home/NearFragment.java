@@ -328,6 +328,7 @@ public class NearFragment extends BaseFragment {
 								public void onSuccess(JSONObject data) {
 									try {
 										JSONArray arr = null;
+										Log.i(TAG, "test:"+data.toString());
 										if (data.toString().indexOf("[") > 0) {
 											arr = data.getJSONArray("dt");
 										} else {

@@ -41,13 +41,13 @@ public class AROverlayView extends View {
 
         this.context = context;
 
-        mContainer = findViewById(R.id.camera_container_layout);
-
-        LayoutInflater inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View view  = inflater.inflate(R.layout.poitag_layout,null);
-
-        mContainer.addView(view);
+//        mContainer = findViewById(R.id.camera_container_layout);
+//
+//        LayoutInflater inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//
+//        View view  = inflater.inflate(R.layout.poitag_layout,null);
+//
+//        mContainer.addView(view);
 
 
 
@@ -94,10 +94,6 @@ public class AROverlayView extends View {
         paint.setColor(Color.WHITE);
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
         paint.setTextSize(60);
-
-//        POITag poiTag = new POITag(context);
-//        poiTag.setX(500);
-//        poiTag.setY(500);
 
         Log.i("poiresultinfo", "onDraw invoked");
 

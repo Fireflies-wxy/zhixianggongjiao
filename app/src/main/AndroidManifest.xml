@@ -18,29 +18,32 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- Mob shareSDK 所需权限-->
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <!-- Mob shareSDK 所需权限 -->
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <!-- 蓝牙分享所需的权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
-        tools:replace="android:name"
         android:name=".application.BnrcApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:name">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="m5zexVNASHMtI34B9AfnPbD43BICskjs" />
-
-        <meta-data android:name="Mob-AppKey"  android:value="26b36fd31d4d1"/>
-        <meta-data android:name="Mob-AppSecret" android:value="2807e5e9f4f10865b5203f9ec7411980"/>
+        <meta-data
+            android:name="Mob-AppKey"
+            android:value="26b36fd31d4d1" />
+        <meta-data
+            android:name="Mob-AppSecret"
+            android:value="2807e5e9f4f10865b5203f9ec7411980" />
 
         <activity
             android:name=".activity.SplashActivity"
@@ -54,17 +57,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.mob.tools.MobUIShell"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+
             <!-- QQ和QQ空间分享 QQ登录的回调必须要配置的 -->
             <intent-filter>
                 <data android:scheme="tencent100371282" />
+
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -72,10 +77,10 @@
             <!-- 新浪微博客户端分享回调必须配置 -->
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.ArActivity" />
         <activity android:name=".activity.base.BaseActivity" />
@@ -92,21 +97,22 @@
         <activity android:name=".activity.SettingView" />
         <activity android:name=".activity.SearchBuslineView" />
 
-        <receiver android:name=".MyBroadcastReceiver"
+        <receiver
+            android:name=".MyBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.example.fireflies.broadcastsender.STILL"/>
+                <action android:name="com.example.fireflies.broadcastsender.STILL" />
             </intent-filter>
         </receiver>
-
 
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote"></service>
+            android:process=":remote" />
 
-        <activity android:name=".activity.MineActivity"></activity>
+        <activity android:name=".activity.MineActivity" />
+        <activity android:name=".activity.EmptyActivity"></activity>
     </application>
 
 </manifest>

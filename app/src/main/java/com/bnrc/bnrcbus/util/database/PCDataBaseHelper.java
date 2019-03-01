@@ -312,7 +312,7 @@ public class PCDataBaseHelper extends SQLiteOpenHelper {
 	// return -1;
 	// }
 
-	private List<Double> dealLocation(double lat, double lng) {
+	private List<Double>  dealLocation(double lat, double lng) {
 		List<Double> locationRank = new ArrayList<Double>();
 		double latRadius = 0.0f;
 		double lngRadius = 0.0f;
