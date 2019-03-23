@@ -14,6 +14,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.opengl.Matrix;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +28,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,7 +37,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.location.Poi;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
@@ -61,7 +60,7 @@ import com.bnrc.bnrcbus.module.AR.POITag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArActivity extends AppCompatActivity implements SensorEventListener,OnGetPoiSearchResultListener {
+public class ArActivity extends AppCompatActivity implements View.OnClickListener,SensorEventListener,OnGetPoiSearchResultListener {
 
     final static String TAG = "ARActivity";
     private SurfaceView surfaceView;
@@ -73,12 +72,14 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
     public LocationClient mLocationClient;
     private PoiSearch mSearch = null;
     private String keyword = "酒店";
+    private ImageView menu_view_ar;
 
     //AR相关
-    private FrameLayout mContainer;
+    private FrameLayout mARContainer;
     private float[] rotatedProjectionMatrix = new float[16];
     private BDLocation currentLocation;
     private List<ARPoint> arPoints;
+    private View poiTag;
 
     //下拉菜单控件
     private ListPopupWindow listPopupWindow = null;
@@ -113,17 +114,26 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
         tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
-        //arOverlayView = new AROverlayView(this);
+        mARContainer = findViewById(R.id.poiGroup_layout);
+
+        menu_view_ar = findViewById(R.id.menu_view_ar);
+        menu_view_ar.setOnClickListener(ArActivity.this);
+
+        arOverlayView = new AROverlayView(this,mARContainer);
 
         mSearch = PoiSearch.newInstance();
         mSearch.setOnGetPoiSearchResultListener(this);
     }
 
-    public void initDownSpinner(){
-        relativeLayout = (RelativeLayout) findViewById(R.id.rl_ar);
+    /**
+     * 以下两个方法用于初始化下拉菜单
+     */
 
-        arrowImageView = (ImageView)findViewById(R.id.poi_pick_arrow);
-        chooseText= (TextView) findViewById(R.id.tv_ar_title);
+    public void initDownSpinner(){
+        relativeLayout = findViewById(R.id.rl_ar);
+
+        arrowImageView = findViewById(R.id.poi_pick_arrow);
+        chooseText= findViewById(R.id.tv_ar_title);
 
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +158,8 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                     Toast.makeText(getApplicationContext(), adapter.getItem(pos), Toast.LENGTH_SHORT).show();
+                    mARContainer.removeAllViews();
+                    Log.i("poiTag", "removed");
                     keyword = adapter.getItem(pos);
                     SearchPoi(keyword,bdLocation);
                     chooseText.setText(keyword);
@@ -186,6 +198,10 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
         return (int) (dipValue * scale + 0.5f);
     }
 
+    /**
+     * 以下两个方法用于获取相关权限
+     */
+
     public void requestCameraPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 this.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -204,20 +220,21 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
         }
     }
 
+    /**
+     * 初始化AROverlayView
+     */
+
     public void initAROverlayView() {
-//        if (arOverlayView.getParent() != null) {
-//            ((ViewGroup) arOverlayView.getParent()).removeView(arOverlayView);
-//        }
-//        cameraContainerLayout.addView(arOverlayView);
+        if (arOverlayView.getParent() != null) {
+            ((ViewGroup) arOverlayView.getParent()).removeView(arOverlayView);
+        }
+        cameraContainerLayout.addView(arOverlayView);
 
-        mContainer = findViewById(R.id.camera_container_layout);
-
-        LayoutInflater inflater=(LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View view  = inflater.inflate(R.layout.poitag_layout,null);
-
-        mContainer.addView(view);
     }
+
+    /**
+     * 初始化ARCameraView
+     */
 
     public void initARCameraView() {
         reloadSurfaceView();
@@ -237,9 +254,12 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
         if (surfaceView.getParent() != null) {
             ((ViewGroup) surfaceView.getParent()).removeView(surfaceView);
         }
-
         cameraContainerLayout.addView(surfaceView);
     }
+
+    /**
+     * 初始化相机
+     */
 
     private void initCamera() {
         int numCams = Camera.getNumberOfCameras();
@@ -253,6 +273,10 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
             }
         }
     }
+
+    /**
+     * 释放相机资源
+     */
 
     private void releaseCamera() {
         if(camera != null) {
@@ -284,8 +308,7 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
             }
 
             Matrix.multiplyMM(rotatedProjectionMatrix, 0, projectionMatrix, 0, rotationMatrixFromVector, 0);
-            //this.arOverlayView.updateRotatedProjectionMatrix(rotatedProjectionMatrix);
-            updateRotatedProjectionMatrix(rotatedProjectionMatrix);
+            this.arOverlayView.updateRotatedProjectionMatrix(rotatedProjectionMatrix);
         }
     }
 
@@ -308,6 +331,7 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
             this.isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             this.locationServiceAvailable = true;
+
             if (!isNetworkEnabled && !isGPSEnabled)    {
                 // cannot get location
                 this.locationServiceAvailable = false;
@@ -320,6 +344,7 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
             mLocationClient = new LocationClient(getApplicationContext());
             LocationClientOption option = new LocationClientOption();
             option.setOpenAutoNotifyMode();
+            option.setCoorType("bd09ll");
             option.setIsNeedLocationPoiList(true);
             mLocationClient.setLocOption(option);
 
@@ -328,7 +353,6 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
                     mLocationClient.registerLocationListener(new BDLocationListener() {
                         @Override
                         public void onReceiveLocation(BDLocation bdLocation) {
-                            Log.i("poiresultinfo", "receive location invoked ");
                             ArActivity.this.bdLocation = bdLocation;
                             updateLatestLocation(bdLocation);
                         }
@@ -344,16 +368,15 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
     }
 
     private void updateLatestLocation(BDLocation bdlocation) {
-        //if (arOverlayView !=null) {
-            //arOverlayView.updateCurrentLocation(bdlocation);
+        if (arOverlayView !=null) {
+            arOverlayView.updateCurrentLocation(bdlocation);
 
-            updateCurrentLocation(bdLocation);
             Log.i("poiresultinfo", "update invoked ");
             SearchPoi(keyword,bdlocation);
 
             tvCurrentLocation.setText(String.format("lat: %s \nlon: %s \naltitude: %s \n",
                     bdlocation.getLatitude(), bdlocation.getLongitude(), bdlocation.getAltitude()));
-        //}
+        }
 
     }
 
@@ -361,7 +384,7 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
         Log.i("poiresultinfo", "search invoked ");
         mSearch.searchNearby(new PoiNearbySearchOption()
                 .keyword(keyword)
-                .sortType(PoiSortType.distance_from_near_to_far)
+                .sortType(PoiSortType.comprehensive)
                 .location(new LatLng(bdlocation.getLatitude(),bdlocation.getLongitude()))
                 .radius(2000)
                 .pageNum(10));
@@ -371,18 +394,15 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
     @Override
     public void onGetPoiResult(PoiResult poiResult) {
         if (poiResult == null || poiResult.error != SearchResult.ERRORNO.NO_ERROR) {
-//            Toast.makeText(this, "抱歉，未找到结果", Toast.LENGTH_LONG)
-//                    .show();
-            Log.i("poiresultinfo", "onGetPoiResult: "+"no result");
+            Toast.makeText(this, "抱歉，未找到结果", Toast.LENGTH_LONG)
+                    .show();
             return;
         }else {
             for(PoiInfo poi:poiResult.getAllPoi()){
-                Log.i("poiresultinfo", "onGetPoiResult: "+poi.getName());
+                Log.i("poiresultinfo", "onGetPoiResult: "+poi.getName()+" "+poi.getDistance());
             }
-
-            //if(arOverlayView!=null)
-                //arOverlayView.updatePoiResult(poiResult);
-            updatePoiResult(poiResult);
+            if(arOverlayView!=null)
+                arOverlayView.updatePoiResult(poiResult);
         }
 
     }
@@ -425,70 +445,13 @@ public class ArActivity extends AppCompatActivity implements SensorEventListener
         mLocationClient.stop();
     }
 
-    public void updatePoiResult(PoiResult poiResult){
-        arPoints = new ArrayList<>();
-        for(PoiInfo poi:poiResult.getAllPoi()){
-            arPoints.add(new ARPoint(poi.getName(),poi.location.latitude,poi.location.longitude,0));
-        }
-
-
-        //this.invalidate();
-    }
-
-    public void updateRotatedProjectionMatrix(float[] rotatedProjectionMatrix) {
-        this.rotatedProjectionMatrix = rotatedProjectionMatrix;
-        //this.invalidate();
-    }
-
-    public void updateCurrentLocation(BDLocation currentLocation){
-        this.currentLocation = currentLocation;
-        //this.invalidate();
-    }
-
-    public void initTags(){
-        if (currentLocation == null || arPoints == null) {
-            return;
-        }
-
-        final int radius = 30;
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.WHITE);
-        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-        paint.setTextSize(60);
-
-        Log.i("poiresultinfo", "onDraw invoked");
-
-        for (int i = 0; i < arPoints.size(); i ++) {
-            float[] currentLocationInECEF = LocationHelper.WSG84toECEF(currentLocation);
-            float[] pointInECEF = LocationHelper.WSG84toECEF(arPoints.get(i).getLocation());
-            float[] pointInENU = LocationHelper.ECEFtoENU(currentLocation, currentLocationInECEF, pointInECEF);
-
-            float[] cameraCoordinateVector = new float[4];
-            Matrix.multiplyMV(cameraCoordinateVector, 0, rotatedProjectionMatrix, 0, pointInENU, 0);
-
-            // cameraCoordinateVector[2] is z, that always less than 0 to display on right position
-            // if z > 0, the point will display on the opposite
-            if (cameraCoordinateVector[2] < 0) {
-                float x  = (0.5f + cameraCoordinateVector[0]/cameraCoordinateVector[3]) * 1080;
-                float y = (0.5f - cameraCoordinateVector[1]/cameraCoordinateVector[3]) * 1920;
-
-//                Drawable d = null;
-//
-//                d = ContextCompat.getDrawable(context, R.drawable.poi_drawable);
-//
-//                Bitmap myBitmap = ((BitmapDrawable)d).getBitmap();
-//
-//
-//                canvas.drawBitmap(myBitmap, x - (30 * arPoints.get(i).getName().length() / 2), y - 80, paint);
-//                //canvas.drawCircle(x, y, radius, paint);
-//                canvas.drawText(arPoints.get(i).getName(), x - (30 * arPoints.get(i).getName().length() / 2), y - 80, paint);
-                POITag poiTag = new POITag(this);
-                poiTag.setX(x);
-                poiTag.setY(y);
-
-            }
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.menu_view_ar:
+                arOverlayView.startMove();
         }
     }
+
 }
 

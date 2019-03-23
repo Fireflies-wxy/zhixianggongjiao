@@ -19,6 +19,7 @@ android {
 //    configurations{
 //        all*.exclude group:'com.squareup.okio', module:'okio'
 //    }
+    buildToolsVersion '26.0.2'
 }
 
 

@@ -1,5 +1,7 @@
 package com.bnrc.bnrcbus.module.AR;
 
+import android.util.Log;
+
 import com.baidu.location.BDLocation;
 
 /**
@@ -13,6 +15,7 @@ public class LocationHelper {
     public static float[] WSG84toECEF(BDLocation location) {
         double radLat = Math.toRadians(location.getLatitude());
         double radLon = Math.toRadians(location.getLongitude());
+        Log.i("async", "updated lon: "+location.getLongitude());
 
         float clat = (float) Math.cos(radLat);
         float slat = (float) Math.sin(radLat);
@@ -21,9 +24,13 @@ public class LocationHelper {
 
         float N = (float) (WGS84_A / Math.sqrt(1.0 - WGS84_E2 * slat * slat));
 
-        float x = (float) ((N + location.getAltitude()) * clat * clon);
-        float y = (float) ((N + location.getAltitude()) * clat * slon);
-        float z = (float) ((N * (1.0 - WGS84_E2) + location.getAltitude()) * slat);
+        float x = (float) ((N + 0) * clat * clon);
+        float y = (float) ((N + 0) * clat * slon);
+        float z = (float) ((N * (1.0 - WGS84_E2) + 0) * slat);
+
+//        float x = (float) ((N + location.getAltitude()) * clat * clon);
+//        float y = (float) ((N + location.getAltitude()) * clat * slon);
+//        float z = (float) ((N * (1.0 - WGS84_E2) + location.getAltitude()) * slat);
 
         return new float[] {x , y, z};
     }

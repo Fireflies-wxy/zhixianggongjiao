@@ -1,23 +1,21 @@
 package com.bnrc.bnrcbus.module.AR;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.opengl.Matrix;
-import android.support.v4.content.ContextCompat;
+import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.poi.PoiResult;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.bnrc.bnrcbus.R;
 
 import java.util.ArrayList;
@@ -32,42 +30,27 @@ public class AROverlayView extends View {
     Context context;
     private float[] rotatedProjectionMatrix = new float[16];
     private BDLocation currentLocation;
-    private List<ARPoint> arPoints;
-    private FrameLayout mContainer;
+    private List<ARPoint> arPoints = null;
+    private FrameLayout mARContainer;
+    private TextView poi_name,poi_distance;
+    private int maxWidth;
+    private int movingSpeed = 20;
+    private ARPoint movingCar;
 
 
-    public AROverlayView(Context context) {
+    public AROverlayView(Context context,FrameLayout mARContainer) {
         super(context);
 
         this.context = context;
-
-//        mContainer = findViewById(R.id.camera_container_layout);
-//
-//        LayoutInflater inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-//        View view  = inflater.inflate(R.layout.poitag_layout,null);
-//
-//        mContainer.addView(view);
-
-
-
-//        POITag poiTag = new POITag(context);
-//        poiTag.setX(500);
-//        poiTag.setY(500);
+        this.mARContainer = mARContainer;
 
         //Demo points
-//        arPoints = new ArrayList<ARPoint>() {{
-//            add(new ARPoint("KLPAC", 3.1850, 101.6868, 0));
-//            add(new ARPoint("Twin Tower", 3.1579, 101.7116, 0));
-//        }};
-    }
 
-    public void updatePoiResult(PoiResult poiResult){
-        arPoints = new ArrayList<>();
-        for(PoiInfo poi:poiResult.getAllPoi()){
-            arPoints.add(new ARPoint(poi.getName(),poi.location.latitude,poi.location.longitude,0));
-        }
-        this.invalidate();
+        arPoints = new ArrayList<ARPoint>();
+//        arPoints = new ArrayList<ARPoint>() {{
+//            add(new ARPoint("北邮科技酒店","467m", 39.9704,116.3618, 0));
+//            add(new ARPoint("枫蓝国际","975m", 39.9594, 116.3639, 0));
+//        }};
     }
 
     public void updateRotatedProjectionMatrix(float[] rotatedProjectionMatrix) {
@@ -80,49 +63,118 @@ public class AROverlayView extends View {
         this.invalidate();
     }
 
+    public void updatePoiResult(PoiResult poiResult){
+        for(PoiInfo poi:poiResult.getAllPoi()){
+            if(!arPoints.contains(poi))
+                arPoints.add(new ARPoint(poi.getName(),(int)DistanceUtil.getDistance(
+                        new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()),
+                        new LatLng(poi.location.latitude,poi.location.longitude)
+                                )+"m",poi.location.latitude,poi.location.longitude,0));
+        }
+    }
+
+    public void updateMovingPoint(int inclat){
+        movingCar = new ARPoint("387路公交","467m", 39.9584,116.3618+0.001*inclat, 0);
+        Log.i("async", "updated moving point: "+inclat);
+    }
+
+    public void startMove(){
+        new MyAsyncTask().execute(0,5000);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (currentLocation == null || arPoints == null) {
+        if (currentLocation == null) {
             return;
         }
 
-        final int radius = 30;
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.WHITE);
-        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-        paint.setTextSize(60);
+        if (arPoints.size()>0){
+            for (int i = 0; i < arPoints.size(); i ++) {
+                float[] currentLocationInECEF = LocationHelper.WSG84toECEF(currentLocation);
+                float[] pointInECEF = LocationHelper.WSG84toECEF(arPoints.get(i).getLocation());
+                float[] pointInENU = LocationHelper.ECEFtoENU(currentLocation, currentLocationInECEF, pointInECEF);
 
-        Log.i("poiresultinfo", "onDraw invoked");
+                float[] cameraCoordinateVector = new float[4];
+                Matrix.multiplyMV(cameraCoordinateVector, 0, rotatedProjectionMatrix, 0, pointInENU, 0);
 
-        for (int i = 0; i < arPoints.size(); i ++) {
-            float[] currentLocationInECEF = LocationHelper.WSG84toECEF(currentLocation);
-            float[] pointInECEF = LocationHelper.WSG84toECEF(arPoints.get(i).getLocation());
-            float[] pointInENU = LocationHelper.ECEFtoENU(currentLocation, currentLocationInECEF, pointInECEF);
+                // cameraCoordinateVector[2] is z, that always less than 0 to display on right position
+                // if z > 0, the point will display on the opposite
+                if (cameraCoordinateVector[2] < 0) {
+                    float x  = (0.5f + cameraCoordinateVector[0]/cameraCoordinateVector[3]) * canvas.getWidth();
+                    float y = (0.5f - cameraCoordinateVector[1]/cameraCoordinateVector[3]) * canvas.getHeight();
 
-            float[] cameraCoordinateVector = new float[4];
-            Matrix.multiplyMV(cameraCoordinateVector, 0, rotatedProjectionMatrix, 0, pointInENU, 0);
 
-            // cameraCoordinateVector[2] is z, that always less than 0 to display on right position
-            // if z > 0, the point will display on the opposite
-            if (cameraCoordinateVector[2] < 0) {
-                float x  = (0.5f + cameraCoordinateVector[0]/cameraCoordinateVector[3]) * canvas.getWidth();
-                float y = (0.5f - cameraCoordinateVector[1]/cameraCoordinateVector[3]) * canvas.getHeight();
+                    if(arPoints.get(i).getPoiTag()==null){
+                        View poiTag = LayoutInflater.from(context).inflate(R.layout.poitag_layout, null, false);
+                        poi_name = poiTag.findViewById(R.id.poi_name);
+                        poi_distance = poiTag.findViewById(R.id.poi_distance);
+                        poi_name.setText(arPoints.get(i).getName());
+                        poi_distance.setText(arPoints.get(i).getDistance());
 
-//                Drawable d = null;
-//
-//                d = ContextCompat.getDrawable(context, R.drawable.poi_drawable);
-//
-//                Bitmap myBitmap = ((BitmapDrawable)d).getBitmap();
-//
-//
-//                canvas.drawBitmap(myBitmap, x - (30 * arPoints.get(i).getName().length() / 2), y - 80, paint);
-//                //canvas.drawCircle(x, y, radius, paint);
-//                canvas.drawText(arPoints.get(i).getName(), x - (30 * arPoints.get(i).getName().length() / 2), y - 80, paint);
+                        poi_name.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                        poi_distance.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
+                        Log.i("poiTag", "poi_name: "+poi_name.getMeasuredWidth());
+                        Log.i("poiTag", "poi_distance: "+poi_distance.getMeasuredWidth());
+
+                        maxWidth = poi_name.getMeasuredWidth()>=poi_distance.getMeasuredWidth()?poi_name.getMeasuredWidth():poi_distance.getMeasuredWidth();
+                        Log.i("poiTag", "maxWidth: "+maxWidth);
+
+                        poi_name.setWidth(maxWidth);
+                        poi_distance.setWidth(maxWidth);
+
+                        arPoints.get(i).setPoiTag(poiTag);
+                        mARContainer.addView(poiTag);
+                    }
+                    arPoints.get(i).getPoiTag().setX(x);
+                    arPoints.get(i).getPoiTag().setY(y);
+                }
             }
         }
+
     }
+
+    class MyAsyncTask extends AsyncTask<Integer,Integer,Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mARContainer.removeAllViews();
+            arPoints.clear();
+            movingCar = new ARPoint("387路公交","467m", 39.9584,116.3618, 0);
+            arPoints.add(movingCar);
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... integers) {
+            int start = integers[0];
+            int end = integers[1];
+
+            int result = 0;
+            for(int i = start; i <=end; i++){
+                SystemClock.sleep(100);
+                result = i/100;
+                publishProgress(result);
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer[] values) {
+            super.onProgressUpdate(values);
+            updateMovingPoint(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+        }
+
+    }
+
+
+
 }
