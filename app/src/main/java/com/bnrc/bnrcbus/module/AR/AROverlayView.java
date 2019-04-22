@@ -36,6 +36,7 @@ public class AROverlayView extends View {
     private int maxWidth;
     private int movingSpeed = 20;
     private ARPoint movingCar;
+    private MyAsyncTask mTask;
 
 
     public AROverlayView(Context context,FrameLayout mARContainer) {
@@ -74,12 +75,18 @@ public class AROverlayView extends View {
     }
 
     public void updateMovingPoint(int inclat){
-        movingCar = new ARPoint("387路公交","467m", 39.9584,116.3618+0.001*inclat, 0);
+        movingCar.setLongitude(116.3618+0.0003*inclat);
         Log.i("async", "updated moving point: "+inclat);
     }
 
     public void startMove(){
-        new MyAsyncTask().execute(0,5000);
+        Log.i("async", "strat move");
+        mTask = new MyAsyncTask();
+        mTask.execute(0,200);
+    }
+
+    public void cancleTask(){
+
     }
 
     @Override
@@ -145,6 +152,7 @@ public class AROverlayView extends View {
             arPoints.clear();
             movingCar = new ARPoint("387路公交","467m", 39.9584,116.3618, 0);
             arPoints.add(movingCar);
+            Log.i("async", "Begin asyncTask------------------------------------");
         }
 
         @Override
@@ -154,8 +162,8 @@ public class AROverlayView extends View {
 
             int result = 0;
             for(int i = start; i <=end; i++){
-                SystemClock.sleep(100);
-                result = i/100;
+                SystemClock.sleep(50);
+                result = i;
                 publishProgress(result);
             }
 

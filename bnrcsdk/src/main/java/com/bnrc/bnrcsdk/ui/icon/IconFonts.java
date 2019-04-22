@@ -7,7 +7,7 @@ import com.joanzapata.iconify.Icon;
  */
 
 public enum IconFonts implements Icon {
-    icon_home('\ue642'),
+    icon_home('\ue642'), //
     icon_route('\ue61b'),
     icon_ar('\ue8f0'),
     icon_buscircle('\ue6b4'),

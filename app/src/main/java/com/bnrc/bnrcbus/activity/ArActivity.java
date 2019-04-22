@@ -443,6 +443,7 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
     protected void onDestroy() {
         super.onDestroy();
         mLocationClient.stop();
+        arOverlayView.cancleTask();
     }
 
     @Override
