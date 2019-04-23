@@ -35,13 +35,13 @@ import com.bnrc.bnrcsdk.util.RandomColor;
 import java.util.List;
 import java.util.Map;
 
-public class ConcernAdapter extends BaseExpandableListAdapter {
+public class CollectAdapter extends BaseExpandableListAdapter {
 	public static final int NULL = 0;
 	public static final int FAV = 1;
 	public static final int NORMAL = 2;
 	private Context mContext;
 
-	private static final String TAG = ConcernAdapter.class.getSimpleName();
+	private static final String TAG = CollectAdapter.class.getSimpleName();
 	private List<Group> groups;
 	private LayoutInflater inflater;
 	private RandomColor mColor = RandomColor.MATERIAL;
@@ -50,8 +50,8 @@ public class ConcernAdapter extends BaseExpandableListAdapter {
 	private IPopWindowListener mChooseListener;
 	private NetAndGpsUtil mNetAndGpsUtil;
 
-	public ConcernAdapter(List<Group> groups, Context context,
-                          ListView listview, IPopWindowListener mChooseListener) {
+	public CollectAdapter(List<Group> groups, Context context,
+						  ListView listview, IPopWindowListener mChooseListener) {
 		this.groups = groups;
 		this.mContext = context;
 		inflater = LayoutInflater.from(this.mContext);
@@ -93,10 +93,10 @@ public class ConcernAdapter extends BaseExpandableListAdapter {
 		ChildViewHolder holder = null;
 		if (convertView == null) {
 			if (isLastChild)
-				convertView = inflater.inflate(R.layout.child_concern_bottom,
+				convertView = inflater.inflate(R.layout.child_loc,
 						null);
 			else
-				convertView = inflater.inflate(R.layout.child_concern, null);
+				convertView = inflater.inflate(R.layout.child_loc, null);
 			holder = new ChildViewHolder();
 			holder.buslineName = (TextView) convertView
 					.findViewById(R.id.tv_buslineName);

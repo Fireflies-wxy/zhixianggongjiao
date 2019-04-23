@@ -8,7 +8,7 @@
     <string name="route_image_view_text">路线</string>
     <string name="ar_image_view_text">公交AR</string>
     <string name="buscircle_image_view_text">公交圈</string>
-    <string name="status_image_view_text">路况</string>
+    <string name="status_image_view_text">拥挤度</string>
     <string name="message_image_view_text">消息</string>
 
     <string name="share">快来下载《智享公交》应用吧</string>

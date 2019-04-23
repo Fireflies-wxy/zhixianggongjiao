@@ -22,9 +22,23 @@
 
     </RelativeLayout>
 
+    <Button
+        android:id="@+id/btn_attach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="34dp"
+        android:text="Button"
+        android:visibility="gone" />
 
+    <RelativeLayout
+        android:id="@+id/rlayout_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#b0000000"
+        android:visibility="gone" >
 
-
-
+    </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>

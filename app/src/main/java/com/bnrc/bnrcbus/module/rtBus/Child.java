@@ -55,6 +55,10 @@ public class Child implements Cloneable, Serializable {
 	private boolean isDataChanged = false;
 	private int isAlertOpen = NONE;
 
+	//添加评论分数
+	private int stationStatus = 2;
+	private int lineStatus = 1;
+
 	public int isAlertOpen() {
 		return isAlertOpen;
 	}
@@ -223,4 +227,19 @@ public class Child implements Cloneable, Serializable {
 		}
 	}
 
+	public int getStationStatus() {
+		return stationStatus;
+	}
+
+	public void setStationStatus(int stationStatus) {
+		this.stationStatus = stationStatus;
+	}
+
+	public int getLineStatus() {
+		return lineStatus;
+	}
+
+	public void setLineStatus(int lineStatus) {
+		this.lineStatus = lineStatus;
+	}
 }

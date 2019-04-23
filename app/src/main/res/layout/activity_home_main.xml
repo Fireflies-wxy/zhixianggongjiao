@@ -56,7 +56,7 @@
     <com.bnrc.bnrcsdk.ui.tabhost.RTabHost
         android:id="@+id/tab_host"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:background="@android:color/white"
         android:orientation="horizontal">
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="6dp"
-                android:textSize="20sp"
+                android:textSize="25sp"
                 android:textColor="@drawable/page_tab_text" />
 
             <android.support.v7.widget.AppCompatTextView
@@ -85,39 +85,39 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 android:text="@string/home_image_view_text"
-                android:textSize="12sp"
+                android:textSize="15sp"
                 android:textColor="@drawable/page_tab_text" />
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/route_layout_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingBottom="5dp">
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/route_layout_view"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:paddingBottom="5dp">-->
 
-            <com.joanzapata.iconify.widget.IconTextView
-                android:id="@+id/route_image_view"
-                android:text="{icon-route}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="6dp"
-                android:textSize="20sp"
-                android:textColor="@drawable/page_tab_text"/>
+            <!--<com.joanzapata.iconify.widget.IconTextView-->
+                <!--android:id="@+id/route_image_view"-->
+                <!--android:text="{icon-route}"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginTop="6dp"-->
+                <!--android:textSize="20sp"-->
+                <!--android:textColor="@drawable/page_tab_text"/>-->
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/route_tv_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:text="@string/route_image_view_text"
-                android:textSize="12sp"
-                android:textColor="@drawable/page_tab_text" />
+            <!--<android.support.v7.widget.AppCompatTextView-->
+                <!--android:id="@+id/route_tv_view"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:text="@string/route_image_view_text"-->
+                <!--android:textSize="12sp"-->
+                <!--android:textColor="@drawable/page_tab_text" />-->
 
-        </RelativeLayout>
+        <!--</RelativeLayout>-->
 
         <RelativeLayout
             android:id="@+id/ar_layout_view"
@@ -130,7 +130,7 @@
             <com.bnrc.bnrcsdk.ui.circleimage.CircleImageView
                 android:id="@+id/ar_image_view"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:layout_centerInParent="true"
                 android:layout_above="@+id/ar_tv_view"
                 android:src="@drawable/icon_ar"
@@ -145,7 +145,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 android:text="@string/ar_image_view_text"
-                android:textSize="12sp"
+                android:textSize="15sp"
                 android:textColor="@drawable/page_tab_text" />
 
         </RelativeLayout>
@@ -165,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="6dp"
-                android:textSize="20sp"
+                android:textSize="25sp"
                 android:textColor="@drawable/page_tab_text"/>
 
             <android.support.v7.widget.AppCompatTextView
@@ -175,39 +175,39 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 android:text="@string/status_image_view_text"
-                android:textSize="12sp"
+                android:textSize="15sp"
                 android:textColor="@drawable/page_tab_text" />
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/message_layout_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingBottom="5dp">
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/message_layout_view"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:paddingBottom="5dp">-->
 
-            <com.joanzapata.iconify.widget.IconTextView
-                android:id="@+id/message_image_view"
-                android:text="{icon-message}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="6dp"
-                android:textSize="20sp"
-                android:textColor="@drawable/page_tab_text"/>
+            <!--<com.joanzapata.iconify.widget.IconTextView-->
+                <!--android:id="@+id/message_image_view"-->
+                <!--android:text="{icon-message}"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginTop="6dp"-->
+                <!--android:textSize="20sp"-->
+                <!--android:textColor="@drawable/page_tab_text"/>-->
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/message_tv_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:text="@string/message_image_view_text"
-                android:textSize="12sp"
-                android:textColor="@drawable/page_tab_text" />
+            <!--<android.support.v7.widget.AppCompatTextView-->
+                <!--android:id="@+id/message_tv_view"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:text="@string/message_image_view_text"-->
+                <!--android:textSize="12sp"-->
+                <!--android:textColor="@drawable/page_tab_text" />-->
 
-        </RelativeLayout>
+        <!--</RelativeLayout>-->
 
 
 

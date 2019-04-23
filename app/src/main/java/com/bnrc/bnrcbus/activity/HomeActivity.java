@@ -8,17 +8,24 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bnrc.bnrcbus.R;
 import com.bnrc.bnrcbus.activity.base.BaseActivity;
+import com.bnrc.bnrcbus.adapter.IPopWindowListener;
+import com.bnrc.bnrcbus.constant.Constants;
+import com.bnrc.bnrcbus.module.rtBus.Child;
+import com.bnrc.bnrcbus.module.user.LoginInfo;
+import com.bnrc.bnrcbus.util.database.PCUserDataDBHelper;
 import com.bnrc.bnrcbus.view.fragment.BaseFragment;
-import com.bnrc.bnrcbus.view.fragment.buscircle.BusCircleFragment;
+import com.bnrc.bnrcbus.view.fragment.SelectPicPopupWindow;
+import com.bnrc.bnrcbus.view.fragment.home.RateFragment;
 import com.bnrc.bnrcbus.view.fragment.home.HomeFragment;
-import com.bnrc.bnrcbus.view.fragment.message.MessageFragment;
-import com.bnrc.bnrcbus.view.fragment.route.RouteFragment;
 import com.bnrc.bnrcsdk.ui.tabhost.RTabHost;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.bnrc.bnrcsdk.ui.circleimage.CircleImageView;
@@ -35,7 +42,7 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
  * 创建首页及其他fragment
  */
 
-public class HomeActivity extends BaseActivity implements View.OnClickListener{
+public class HomeActivity extends BaseActivity implements View.OnClickListener,IPopWindowListener {
 
     private final static int REQUEST_CAMERA_PERMISSIONS_CODE = 11;
     public static final int REQUEST_LOCATION_PERMISSIONS_CODE = 0;
@@ -48,7 +55,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     private RTabHost mTabHost;
     private int mLastIndex = 0;  //初始化时默认加载第一项"首页"
     private TextView tv_toolbar;
-    private String[] titleList = {"等车来","路线","线路/车况评论","消息"};
+    private String[] titleList = {"等车来","拥挤度评分"};
 
     private RelativeLayout mHomeLayout;
     private RelativeLayout mRouteLayout;
@@ -71,6 +78,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     //分享图标
     private TextView icon_share;
 
+    private Child mChild;
+    private RelativeLayout mCanversLayout;// 阴影遮挡图层
+    private SelectPicPopupWindow menuWindow;
+    private PCUserDataDBHelper mUserDB = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,31 +93,24 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         initView();
         initFragments();
         initTabHost();
+
+        mUserDB = PCUserDataDBHelper.getInstance(HomeActivity.this);
     }
 
     private void initView(){
         mHomeLayout = findViewById(R.id.home_layout_view);
-        //mHomeLayout.setOnClickListener(this);
-        mRouteLayout = findViewById(R.id.route_layout_view);
-        //mRouteLayout.setOnClickListener(this);
         mArLayout = findViewById(R.id.ar_layout_view);
         mArLayout.setOnClickListener(this);
         mBusCircleLayout = findViewById(R.id.buscircle_layout_view);
-        //mBusCircleLayout.setOnClickListener(this);
-        mMessageLayout = findViewById(R.id.message_layout_view);
-       // mMessageLayout.setOnClickListener(this);
 
         icon_home = findViewById(R.id.home_image_view);
-        icon_route = findViewById(R.id.route_image_view);
         icon_ar = findViewById(R.id.ar_image_view);
         icon_buscircle = findViewById(R.id.buscircle_image_view);
-        icon_message = findViewById(R.id.message_image_view);
 
         tv_home = findViewById(R.id.home_tv_view);
-        tv_route = findViewById(R.id.route_tv_view);
         tv_ar = findViewById(R.id.ar_tv_view);
         tv_buscircle = findViewById(R.id.buscircle_tv_view);
-        tv_message = findViewById(R.id.message_tv_view);
+
         tv_toolbar = findViewById(R.id.tv_home_title);//标题文字
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -120,11 +125,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
     private void initFragments(){
         fragmentList.clear();
-        classList = new ArrayList<Class<? extends BaseFragment>>();
+        classList = new ArrayList<>();
         classList.add(HomeFragment.class);
-        classList.add(RouteFragment.class);
-        classList.add(BusCircleFragment.class);
-        classList.add(MessageFragment.class);
+        classList.add(RateFragment.class);
 
         fm = getSupportFragmentManager();
         FragmentTransaction transcation = fm.beginTransaction();
@@ -251,4 +254,63 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         oks.show(this);
     }
 
+    @Override
+    public void onPopClick(Child child) {
+        Log.i("pop", "onPopClick: ");
+        mChild = child;
+        mCanversLayout = (RelativeLayout) findViewById(R.id.rlayout_shadow);
+        menuWindow = new SelectPicPopupWindow(HomeActivity.this, mChild,
+                mPopItemListener);
+        menuWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {// 点击消失
+                mCanversLayout.setVisibility(View.GONE);
+            }
+        });
+        menuWindow.showAtLocation(
+                HomeActivity.this.findViewById(R.id.drawer_layout), Gravity.BOTTOM
+                        | Gravity.CENTER_HORIZONTAL, 0, 0);
+        menuWindow.setFocusable(true);
+        menuWindow.setOutsideTouchable(false);
+        menuWindow.update();
+        mCanversLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onLoginClick() {
+
+    }
+
+    // 为弹出窗口实现监听类
+    private View.OnClickListener mPopItemListener = new View.OnClickListener() {
+
+        public void onClick(View v) {
+            int LineID = mChild.getLineID();
+            int StationID = mChild.getStationID();
+            switch (v.getId()) {
+                case R.id.iv_work:
+                    mChild.setType(Constants.TYPE_WORK);
+                    mUserDB.addFavRecord(mChild);
+                    break;
+                case R.id.iv_home:
+                    mChild.setType(Constants.TYPE_HOME);
+                    mUserDB.addFavRecord(mChild);
+                    break;
+                case R.id.iv_other:
+                    mChild.setType(Constants.TYPE_OTHER);
+                    mUserDB.addFavRecord(mChild);
+                    break;
+                case R.id.iv_del:
+                    mUserDB.cancelFav(LineID, StationID);
+                    mChild.setType(Constants.TYPE_NONE);
+                    break;
+                case R.id.btn_cancel:
+                    break;
+                default:
+                    break;
+            }
+            menuWindow.dismiss();
+            mFragment.refresh();
+        }
+    };
 }

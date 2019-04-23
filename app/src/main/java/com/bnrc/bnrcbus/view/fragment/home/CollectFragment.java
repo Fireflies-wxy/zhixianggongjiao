@@ -33,9 +33,18 @@ import android.widget.RadioGroup;
 
 import com.bnrc.bnrcbus.R;
 import com.bnrc.bnrcbus.activity.SearchBuslineView;
+import com.bnrc.bnrcbus.activity.SettingView;
 import com.bnrc.bnrcbus.adapter.IPopWindowListener;
 import com.bnrc.bnrcbus.adapter.MyListViewAdapter;
+import com.bnrc.bnrcbus.constant.Constants;
+import com.bnrc.bnrcbus.service.PollingService;
+import com.bnrc.bnrcbus.ui.AllConcernFragSwipe;
+import com.bnrc.bnrcbus.ui.HomeFragSwipe;
 import com.bnrc.bnrcbus.ui.MyViewPager;
+import com.bnrc.bnrcbus.ui.WorkFragSwipe;
+import com.bnrc.bnrcbus.util.PollingUtils;
+import com.bnrc.bnrcbus.util.ScanService;
+import com.bnrc.bnrcbus.util.ServiceUtils;
 import com.bnrc.bnrcbus.util.database.DataBaseHelper;
 import com.bnrc.bnrcbus.util.database.UserDataDBHelper;
 import com.bnrc.bnrcbus.view.fragment.BaseFragment;
@@ -56,11 +65,6 @@ public class CollectFragment extends BaseFragment {
 
     private static final String TAG = CollectFragment.class.getSimpleName();
     private Context mContext;
-    private ImageView refesh = null;
-    private ImageView openAlertView;
-    private Handler mHandler;
-    private String isOpenAlert;
-    private EditText mSearchEdt;
     private SegmentedGroup segmented;
     private MyViewPager mPager;
     private AllConcernFragSwipe mAllFrag;
@@ -87,33 +91,8 @@ public class CollectFragment extends BaseFragment {
         mUserDB = UserDataDBHelper.getInstance(mContext);
         // mUserDB.AcquireFavInfoWithLocation(myPoint);
         // initTitleRightLayout();
-        menuSettingBtn = (ImageButton) view.findViewById(R.id.menu_imgbtn);
-        menuSettingBtn.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                mChooseListener.onLoginClick();
-            }
-        });
-        refesh = (ImageView) view.findViewById(R.id.refresh);
-        mSearchEdt = (EditText) view.findViewById(R.id.edt_input);
-        mSearchEdt.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
-                /** 加这个判断，防止该事件被执行两次 */
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    Intent intent = new Intent(getActivity(),
-                            SearchBuslineView.class);
-                    startActivity(intent);
-
-                }
-                return false;
-            }
-        });
-        segmented = (SegmentedGroup) view.findViewById(R.id.segmentedGroup);
+        segmented = view.findViewById(R.id.segmentedGroup);
         segmented.setTintColor(getResources().getColor(
                 R.color.radio_button_selected_color));
         mAllFrag = new AllConcernFragSwipe();
@@ -137,10 +116,6 @@ public class CollectFragment extends BaseFragment {
         TABLE.add(0);
         TABLE.add(1);
         TABLE.add(2);
-        mSearchEdt.clearFocus();
-        InputMethodManager imm = (InputMethodManager) mContext
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mSearchEdt.getWindowToken(), 0);
         return view;
     }
 
@@ -276,87 +251,6 @@ public class CollectFragment extends BaseFragment {
         }
     }
 
-    private void initAD() {
-        isOpenAlert = "开启提醒功能";
-        MobclickAgent.updateOnlineConfig(mContext);
-        String value = MobclickAgent.getConfigParams(mContext,
-                "bus_data_version");
-        JSONObject jsonObj = null;
-        try {
-            jsonObj = new JSONObject(value);
-            String version = jsonObj.getString("version");
-            String ready = jsonObj.getString("ready");
-            SharedPreferences mySharedPreferences = mContext
-                    .getSharedPreferences("setting", SettingView.MODE_PRIVATE);
-            String oldVersion = mySharedPreferences.getString(
-                    "bus_data_version", "1");
-            if (ready.equalsIgnoreCase("YES")
-                    && (version.equalsIgnoreCase(oldVersion) == false)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setMessage("公交数据已经推出了新的版本，您是否要更新？").setTitle("友情提示")
-                        .setNegativeButton("取消", null);
-                builder.setPositiveButton("确定",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                // DataBaseHelper.getInstance(mContext)
-                                // .DownFileWithUrl(
-                                // MobclickAgent.getConfigParams(
-                                // mContext,
-                                // "bus_data_url"));
-
-                            }
-                        });
-                builder.show();
-            }
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        value = MobclickAgent.getConfigParams(mContext,
-                "realtime_bus_data_version");
-        Log.i("realtime_bus_data_version", value);
-        try {
-            jsonObj = new JSONObject(value);
-            String version = jsonObj.getString("version");
-            String ready = jsonObj.getString("ready");
-            SharedPreferences mySharedPreferences = mContext
-                    .getSharedPreferences("setting", SettingView.MODE_PRIVATE);
-            String oldVersion = mySharedPreferences.getString(
-                    "realtime_bus_data_version", "1");
-            if (ready.equalsIgnoreCase("YES")
-                    && (version.equalsIgnoreCase(oldVersion) == false)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setMessage("实时公交数据有更新，您是否要更新？").setTitle("友情提示")
-                        .setNegativeButton("取消", null);
-                builder.setPositiveButton("确定",
-                        new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                // BuslineDBHelper
-                                // .getInstance(mContext)
-                                // .DownFileWithUrl(
-                                // MobclickAgent
-                                // .getConfigParams(
-                                // mContext,
-                                // "realtime_bus_data_url"));
-
-                            }
-                        });
-                builder.show();
-            }
-        } catch (
-
-                JSONException e)
-
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }
 
     @Override
     public void onStart() {

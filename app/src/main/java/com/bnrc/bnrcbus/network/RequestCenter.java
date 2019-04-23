@@ -2,6 +2,7 @@ package com.bnrc.bnrcbus.network;
 
 import com.bnrc.bnrcbus.module.bus.BusModel;
 import com.bnrc.bnrcbus.module.bus.ErrorBusModel;
+import com.bnrc.bnrcbus.module.user.LoginInfo;
 import com.bnrc.bnrcbus.module.user.RegisterInfo;
 import com.bnrc.bnrcbus.module.version.VersionModel;
 import com.bnrc.bnrcsdk.okhttp.CommonOkHttpClient;
@@ -57,13 +58,33 @@ public class RequestCenter {
         RequestCenter.dealGetRequest(URL, null, listener, ErrorBusModel.class);
     }
 
-    public static void register(String uid,DisposeDataListener listener) {
+    public static void register(String uid,String pwd,DisposeDataListener listener) {
         RequestParams params = new RequestParams();
 
-        params.put("uid",uid);
+        params.put("username",uid);
+        params.put("password",pwd);
         params.put("usertype","1"); //暂定为0，以后添加QQ、微博
 
         RequestCenter.dealPostRequest(HttpConstants.REGISTER_URL,params,listener, RegisterInfo.class);
+    }
+
+    public static void login(String uid,String pwd,DisposeDataListener listener) {
+        RequestParams params = new RequestParams();
+
+        params.put("username",uid);
+        params.put("password",pwd);
+
+        RequestCenter.dealPostRequest(HttpConstants.LOGIN_URL,params,listener, LoginInfo.class);
+    }
+
+    public static void submitRate(String uid, int lineID, int stationID, int lineRate, int stationRate, DisposeDataListener listener) {
+
+//        RequestParams params = new RequestParams();
+//        params.put("SID", "1000020761");
+//        params.put("LID", "1038700");
+//        params.put("T", Long.toString(new Date().getTime()));
+//
+//        RequestCenter.dealPostRequest(HttpConstants.BUS_URL, params, listener, BusModel.class);
     }
 
 }

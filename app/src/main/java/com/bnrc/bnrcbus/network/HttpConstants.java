@@ -30,7 +30,7 @@ public class HttpConstants {
     public static final String BEIJINGDB_URL = ROOT_URL + "/api/v1/download";// 更新数据库
     public static final String POSTCOLLECTMESSAGE_URL = ROOT_URL + "/api/v1/collect";
 
-    public static final String REGISTER_URL = ROOT_URL + "/api/v1/register";//注册
+    public static final String REGISTER_URL = ROOT_URL + "/api/v1/registerpwd";//注册
     public static final String LOGIN_URL = ROOT_URL + "/api/v1/login";//登录
     public static final String TOKEN_URL = ROOT_URL + "/api/v1/token";//登录token
 

@@ -49,17 +49,18 @@ public class StationsAdapter extends BaseExpandableListAdapter {
 	private RandomColor mColor = RandomColor.MATERIAL;
 	private Animation push_left_in;
 	private ListView mListView;
-	//private IPopWindowListener mChooseListener;
+	private IPopWindowListener mChooseListener;
 	private NetAndGpsUtil mNetAndGpsUtil;
 
 	public StationsAdapter(List<Group> groups, Context context,
-                           ListView listview) {
+                           ListView listview,IPopWindowListener mChooseListener) {
 		this.groups = groups;
 		this.mContext = context;
 		inflater = LayoutInflater.from(this.mContext);
 		push_left_in = AnimationUtils.loadAnimation(context,
 				R.anim.in_from_left);
 		mListView = listview;
+		this.mChooseListener = mChooseListener;
 		mNetAndGpsUtil = NetAndGpsUtil.getInstance(mContext);
 	}
 
@@ -246,19 +247,19 @@ public class StationsAdapter extends BaseExpandableListAdapter {
 				break;
 			}
 
-//			holder.fixButton.setOnClickListener(new OnClickListener() {
-//				// Ϊbutton���¼��������ô˰�ť��ʵ��ɾ���¼�
-//
-//				@Override
-//				public void onClick(View v) {
-//					if (mChooseListener == null)
-//						Log.i(TAG, "mChooseListener==null");
-//					if (child == null)
-//						Log.i(TAG, "child==null");
-//					mChooseListener.onPopClick(child);
-//					frontViewToMove.swipeBack();
-//				}
-//			});
+			holder.fixButton.setOnClickListener(new OnClickListener() {
+				// Ϊbutton���¼��������ô˰�ť��ʵ��ɾ���¼�
+
+				@Override
+				public void onClick(View v) {
+					if (mChooseListener == null)
+						Log.i(TAG, "mChooseListener==null");
+					if (child == null)
+						Log.i(TAG, "child==null");
+					mChooseListener.onPopClick(child);
+					frontViewToMove.swipeBack();
+				}
+			});
 
 		}
 	}

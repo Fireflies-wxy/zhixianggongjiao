@@ -87,7 +87,7 @@ import okhttp3.Response;
  * Created by apple on 2018/6/4.
  */
 
-public class NearFragment extends BaseFragment {
+public class NearFragment extends BaseFragment{
 
     private static final String TAG = "NearFragment";
 
@@ -147,6 +147,23 @@ public class NearFragment extends BaseFragment {
         }
     };
 
+	private SwipeMenuExpandableListView.OnMenuItemClickListener mMenuItemClickListener = new SwipeMenuExpandableListView.OnMenuItemClickListener() {
+		@Override
+		public boolean onMenuItemClick(int groupPosition, int childPosition,
+									   SwipeMenu menu, int index) {
+
+			if (groupPosition < mNearGroups.size() && groupPosition >= 0) {
+				List<Child> children = mNearGroups.get(groupPosition)
+						.getChildren();
+				if (childPosition < children.size() && childPosition >= 0) {
+					Child child = children.get(childPosition);
+					mChooseListener.onPopClick(child);
+				}
+			}
+			return false;
+		}
+	};
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -192,7 +209,7 @@ public class NearFragment extends BaseFragment {
         mNearGroups = new ArrayList<Group>();
         mNearGroups = Collections.synchronizedList(mNearGroups);
         mNearAdapter = new NearAdapter(mNearGroups, mContext,
-                mNearExplistview.listView);
+                mNearExplistview.listView,mChooseListener);
         mNearExplistview.setAdapter(mNearAdapter);
         mNearExplistview.setMenuCreator(mMenuCreator);
 
@@ -990,7 +1007,7 @@ public class NearFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         // TODO Auto-generated method stub
         super.onAttach(activity);
-//        mChooseListener = (IPopWindowListener) activity;
+        mChooseListener = (IPopWindowListener) activity;
         Log.i(TAG, TAG + " onAttach");
 
     }

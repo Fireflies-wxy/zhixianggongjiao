@@ -22,8 +22,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private TextView tv_link_sign_in;
     private TextView pressback;
     private EditText et_username;
+    private EditText et_password;
 
     private String username;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         pressback.setOnClickListener(this);
 
         et_username = findViewById(R.id.edit_sign_up_name);
+        et_password = findViewById(R.id.edit_sign_up_password);
     }
 
 
@@ -48,28 +51,29 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         switch (view.getId()){
             case R.id.btn_sign_up:
                 username = et_username.getText().toString().trim();
-                RequestCenter.register(username, new DisposeDataListener() {
+                password = et_password.getText().toString().trim();
+                RequestCenter.register(username, password,new DisposeDataListener() {
                     @Override
                     public void onSuccess(Object responseObj) {
                         RegisterInfo info = (RegisterInfo) responseObj;
-                        if(info.errorCode == "0"){
+                        Log.i(TAG, "onSuccess: "+info.errorCode+password);
+                        if(info.errorCode == 0){
                             Toast.makeText(RegisterActivity.this,"注册成功,请登录",Toast.LENGTH_SHORT).show();
-                            Log.i(TAG, "注册成功,请登录");
                             startActivity(new Intent(RegisterActivity.this,
                                     LoginActivity.class));
-                        }else if(info.errorCode == "40000"){
-                            Log.i(TAG, "用户名不存在");
+                        }else if(info.errorCode == 40000){
                             Toast.makeText(RegisterActivity.this,"用户名已存在",Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Object reasonObj) {
-                        Log.i(TAG, "注册失败");
                         Toast.makeText(RegisterActivity.this,"注册失败",Toast.LENGTH_SHORT).show();
                     }
                 });
+                break;
             case R.id.tv_link_sign_in:
+                Log.i(TAG, "onSuccess: 201");
                 Intent loginIntent = new Intent(RegisterActivity.this,
                         LoginActivity.class);
                 startActivity(loginIntent);

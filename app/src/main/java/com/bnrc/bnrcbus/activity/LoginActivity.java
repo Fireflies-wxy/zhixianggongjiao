@@ -1,17 +1,22 @@
 package com.bnrc.bnrcbus.activity;
 
 import android.content.Intent;
+import android.location.Location;
 import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bnrc.bnrcbus.R;
+import com.bnrc.bnrcbus.module.user.LoginInfo;
+import com.bnrc.bnrcbus.module.user.RegisterInfo;
 import com.bnrc.bnrcbus.network.RequestCenter;
+import com.bnrc.bnrcsdk.okhttp.listener.DisposeDataListener;
 
 import java.util.HashMap;
 
@@ -31,6 +36,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView login_wechat,login_qq,login_sina;
 
     private PlatformDb platDB; //平台授权数据DB
+
+    private EditText et_username;
+    private EditText et_password;
+
+    private String username;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +63,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         login_qq.setOnClickListener(this);
         login_sina = findViewById(R.id.icon_sign_in_sina);
         login_sina.setOnClickListener(this);
+
+        et_username = findViewById(R.id.edit_sign_in_username);
+        et_password= findViewById(R.id.edit_sign_in_password);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_sign_in:
-                Intent homeIntent = new Intent(LoginActivity.this,
-                        HomeActivity.class);
-                startActivity(homeIntent);
+                username = et_username.getText().toString().trim();
+                password = et_password.getText().toString().trim();
+                RequestCenter.login(username, password,new DisposeDataListener() {
+                    @Override
+                    public void onSuccess(Object responseObj) {
+                        LoginInfo info = (LoginInfo) responseObj;
+                        Log.i(TAG, "onSuccess: "+info.token);
+
+                        Toast.makeText(LoginActivity.this,"登陆成功，跳转至首页",Toast.LENGTH_SHORT).show();
+                        Log.i(TAG, "登陆成功");
+                        startActivity(new Intent(LoginActivity.this,
+                                HomeActivity.class));
+
+                    }
+
+                    @Override
+                    public void onFailure(Object reasonObj) {
+                        Log.i(TAG, "登陆失败"+username+" "+password);
+                        Toast.makeText(LoginActivity.this,"登陆失败",Toast.LENGTH_SHORT).show();
+                    }
+                });
                 break;
             case R.id.tv_link_sign_up:
                 Intent registerIntent = new Intent(LoginActivity.this,

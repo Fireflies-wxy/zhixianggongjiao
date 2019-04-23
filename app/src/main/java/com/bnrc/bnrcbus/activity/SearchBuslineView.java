@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bnrc.bnrcbus.R;
 import com.bnrc.bnrcbus.activity.base.BaseActivity;
 import com.bnrc.bnrcbus.adapter.MyLatestListViewAdapter;
 import com.bnrc.bnrcbus.constant.Constants;
@@ -32,6 +31,8 @@ import com.bnrc.bnrcsdk.util.AnimationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.bnrc.bnrcbus.R;
 
 public class SearchBuslineView extends BaseActivity implements ItemDelListener {
 	private static final String TAG = SearchBuslineView.class.getSimpleName();
@@ -292,85 +293,6 @@ public class SearchBuslineView extends BaseActivity implements ItemDelListener {
 		return Integer.parseInt(str2);
 	}
 
-	private void initAD() {
-//		MobclickAgent.updateOnlineConfig(this);
-//		MobclickAgent
-//				.setOnlineConfigureListener(new UmengOnlineConfigureListener() {
-//					@Override
-//					public void onDataReceived(JSONObject data) {
-//					}
-//				});
-//		String value = MobclickAgent.getConfigParams(SearchBuslineView.this,
-//				"open_ad");
-
-		// if (value.equals("1")) {
-		// mAdContainer = (RelativeLayout) findViewById(R.id.adcontainer);
-		// // Create ad view
-		// mAdview = new AdView(this, "56OJzfwIuN7tr9LoSs",
-		// "16TLmHWoAp8diNUdpuAEMYfi");
-		// SharedPreferences mySharedPreferences = getSharedPreferences(
-		// "setting", UserSettingView.MODE_PRIVATE);
-		// String agString = mySharedPreferences.getString("userAge", "20");
-		// String sexString = mySharedPreferences.getString("userSex", "女");
-		//
-		// if (sexString.equals("女")) {
-		// mAdview.setUserGender("female");
-		// } else {
-		// mAdview.setUserGender("male");
-		// }
-		// // mAdview.setKeyword("game");
-		//
-		// Calendar mycalendar = Calendar.getInstance();// ��ȡ����ʱ��
-		// String curYearString = String
-		// .valueOf(mycalendar.get(Calendar.YEAR));// ��ȡ���
-		// int age = Integer.parseInt(agString);
-		// int birth = Integer.parseInt(curYearString) - age;
-		// mAdview.setUserBirthdayStr(birth + "-08-08");
-		// mAdview.setUserPostcode("123456");
-		// mAdview.setAdEventListener(new AdEventListener() {
-		// @Override
-		// public void onAdOverlayPresented(AdView adView) {
-		// Log.i("DomobSDKDemo", "overlayPresented");
-		// }
-		//
-		// @Override
-		// public void onAdOverlayDismissed(AdView adView) {
-		// Log.i("DomobSDKDemo", "Overrided be dismissed");
-		// }
-		//
-		// @Override
-		// public void onAdClicked(AdView arg0) {
-		// Log.i("DomobSDKDemo", "onDomobAdClicked");
-		// }
-		//
-		// @Override
-		// public void onLeaveApplication(AdView arg0) {
-		// Log.i("DomobSDKDemo", "onDomobLeaveApplication");
-		// }
-		//
-		// @Override
-		// public Context onAdRequiresCurrentContext() {
-		// return SearchBuslineView.this;
-		// }
-		//
-		// @Override
-		// public void onAdFailed(AdView arg0, ErrorCode arg1) {
-		// Log.i("DomobSDKDemo", "onDomobAdFailed");
-		// }
-		//
-		// @Override
-		// public void onEventAdReturned(AdView arg0) {
-		// Log.i("DomobSDKDemo", "onDomobAdReturned");
-		// }
-		// });
-		// RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(
-		// LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		// layout.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		// mAdview.setLayoutParams(layout);
-		// mAdContainer.addView(mAdview);
-		// }
-
-	}
 
 	@Override
 	public void onResume() {

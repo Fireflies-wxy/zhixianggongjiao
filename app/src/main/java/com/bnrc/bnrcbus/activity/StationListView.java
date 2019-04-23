@@ -238,7 +238,7 @@ public class StationListView extends BaseActivity implements IPopWindowListener{
 		mStationListView = (PullLoadMenuListView) findViewById(R.id.explistview_station);
 		mGroups = new ArrayList<Group>();
 		mStationAdapter = new StationsAdapter(mGroups, this,
-				mStationListView.listView);
+				mStationListView.listView,this);
 		mStationListView.setAdapter(mStationAdapter);
 		mStationListView.setMenuCreator(mMenuCreator);
 		// mStationListView.setOnMenuItemClickListener(mMenuItemClickListener);
@@ -1214,6 +1214,7 @@ public class StationListView extends BaseActivity implements IPopWindowListener{
 	@Override
 	public void onPopClick(Child child) {
 		// TODO Auto-generated method stub
+		Log.i("pop", "onPopClick: ");
 		mChild = child;
 		mCanversLayout = (RelativeLayout) findViewById(R.id.rlayout_shadow);
 		menuWindow = new SelectPicPopupWindow(StationListView.this, mChild,

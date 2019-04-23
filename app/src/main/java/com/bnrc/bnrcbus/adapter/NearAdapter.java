@@ -38,6 +38,7 @@ import com.bnrc.bnrcbus.util.database.PCUserDataDBHelper;
 import com.bnrc.bnrcsdk.ui.expandablelistview.FrontViewToMove;
 import com.bnrc.bnrcsdk.util.AnimationUtil;
 import com.bnrc.bnrcsdk.util.DensityUtil;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.List;
 import java.util.Map;
@@ -57,10 +58,10 @@ public class NearAdapter extends BaseExpandableListAdapter {
     private Animation bus_refresh;
 	private BDLocation mBdLocation;
 	private ListView mListView;
-//	private IPopWindowListener mChooseListener;
+	private IPopWindowListener mChooseListener;
 	private NetAndGpsUtil mNetAndGpsUtil;
 
-	public NearAdapter(List<Group> groups, Context context, ListView listview) {
+	public NearAdapter(List<Group> groups, Context context, ListView listview, IPopWindowListener mChooseListener) {
 		this.groups = groups;
 		this.mContext = context;
 		inflater = LayoutInflater.from(this.mContext);
@@ -69,6 +70,7 @@ public class NearAdapter extends BaseExpandableListAdapter {
 				R.anim.in_from_left);
         bus_refresh = AnimationUtils.loadAnimation(context,R.anim.bus_refresh);
 		mListView = listview;
+		this.mChooseListener = mChooseListener;
 		mNetAndGpsUtil = NetAndGpsUtil.getInstance(mContext);
 	}
 
@@ -125,6 +127,8 @@ public class NearAdapter extends BaseExpandableListAdapter {
 			holder.fixButton = (TextView) convertView
 					.findViewById(R.id.btn_delete);
 			holder.frontView = convertView.findViewById(R.id.id_front);
+			holder.img_carStatus = convertView.findViewById(R.id.iv_bus);
+			holder.img_waitStatus = convertView.findViewById(R.id.img_waitStatus);
 			convertView.setTag(holder);
 
 		} else {
@@ -283,14 +287,41 @@ public class NearAdapter extends BaseExpandableListAdapter {
 
 				@Override
 				public void onClick(View v) {
-//					if (mChooseListener == null)
-//						Log.i(TAG, "mChooseListener==null");
+					if (mChooseListener == null)
+						Log.i(TAG, "mChooseListener==null");
 					if (child == null)
 						Log.i(TAG, "child==null");
-//					mChooseListener.onPopClick(child);
+					mChooseListener.onPopClick(child);
 					frontViewToMove.swipeBack();
 				}
 			});
+
+			int carStatusRate = child.getLineStatus();  //乘车拥挤度
+			int waitStatusRate = child.getStationStatus();  //候车拥挤度
+
+            switch (carStatusRate){
+                case 1:
+                    holder.img_carStatus.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+                    break;
+                case 2:
+                    holder.img_carStatus.setTextColor(mContext.getResources().getColor(R.color.color_fed952));
+                    break;
+                case 3:
+                    holder.img_carStatus.setTextColor(mContext.getResources().getColor(R.color.color_ffff4444));
+                    break;
+            }
+
+            switch (waitStatusRate){
+                case 1:
+                    holder.img_waitStatus.setBackgroundResource(R.drawable.wait_status_low);
+                    break;
+                case 2:
+                    holder.img_waitStatus.setBackgroundResource(R.drawable.wait_status_mid);
+                    break;
+                case 3:
+                    holder.img_waitStatus.setBackgroundResource(R.drawable.wait_status_high);
+                    break;
+            }
 
 		}
 	}
@@ -407,6 +438,8 @@ public class NearAdapter extends BaseExpandableListAdapter {
 		LinearLayout lLayoutContainer;
 		TextView fixButton; //
 		View frontView;
+		IconTextView img_carStatus;
+		ImageView img_waitStatus;
 	}
 
 	private String getSequence(int position) {

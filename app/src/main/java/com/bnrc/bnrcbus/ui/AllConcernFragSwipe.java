@@ -21,11 +21,17 @@ import com.baidu.location.BDLocation;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.bnrc.bnrcbus.R;
+import com.bnrc.bnrcbus.activity.BuslineListViewParallel;
+import com.bnrc.bnrcbus.adapter.CollectAdapter;
 import com.bnrc.bnrcbus.adapter.IPopWindowListener;
 import com.bnrc.bnrcbus.adapter.NearAdapter;
+import com.bnrc.bnrcbus.constant.Constants;
+import com.bnrc.bnrcbus.module.rtBus.Child;
 import com.bnrc.bnrcbus.module.rtBus.Group;
+import com.bnrc.bnrcbus.network.MyVolley;
 import com.bnrc.bnrcbus.network.VolleyNetwork;
 import com.bnrc.bnrcbus.util.LocationUtil;
+import com.bnrc.bnrcbus.util.MyCipher;
 import com.bnrc.bnrcbus.util.NetAndGpsUtil;
 import com.bnrc.bnrcbus.util.database.PCUserDataDBHelper;
 import com.bnrc.bnrcbus.view.fragment.BaseFragment;
@@ -33,7 +39,9 @@ import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenu;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuCreator;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuExpandableListView;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuItem;
+import com.bnrc.bnrcsdk.ui.pullloadmenulistciew.IPullRefresh;
 import com.bnrc.bnrcsdk.ui.pullloadmenulistciew.PullLoadMenuListView;
+import com.bnrc.bnrcsdk.util.AnimationUtil;
 
 
 import org.json.JSONArray;
@@ -53,10 +61,16 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class AllConcernFragSwipe extends BaseFragment {
 	private static final String TAG = AllConcernFragSwipe.class.getSimpleName();
 	private PullLoadMenuListView mAllConcernExplistview;
-	private ConcernAdapter mAllConcernAdapter;
+	private CollectAdapter mAllConcernAdapter;
 	private RelativeLayout mAllConcernHint;
 	private List<Group> mGroups;
 	private Context mContext;
@@ -131,7 +145,7 @@ public class AllConcernFragSwipe extends BaseFragment {
 			// TODO Auto-generated method stub
 			Group group = mGroups.get(paramInt1);
 			Child child = group.getChildItem(paramInt2);
-			Intent intent = new Intent(mContext, BuslineListView.class);
+			Intent intent = new Intent(mContext, BuslineListViewParallel.class);
 			intent.putExtra("LineID", child.getLineID());
 			intent.putExtra("StationID", child.getStationID());
 			intent.putExtra("FullName", child.getLineFullName());
@@ -178,7 +192,7 @@ public class AllConcernFragSwipe extends BaseFragment {
 				.getApplicationContext());
 		mGroups = new ArrayList<Group>();
 		mAllConcernExplistview.setMenuCreator(mMenuCreator);
-		mAllConcernAdapter = new ConcernAdapter(mGroups, mContext,
+		mAllConcernAdapter = new CollectAdapter(mGroups, mContext,
 				mAllConcernExplistview.listView, mOnSelectBtn);
 		mAllConcernExplistview.setAdapter(mAllConcernAdapter);
 		// mAllConcernExplistview
@@ -254,49 +268,6 @@ public class AllConcernFragSwipe extends BaseFragment {
 		mTask.execute();
 	}
 
-	// private void startTimer() {
-	// mHandler.postDelayed(new Runnable() {
-	//
-	// @Override
-	// public void run() {
-	// // TODO Auto-generated method stub
-	// mAllConcernAdapter.refresh();
-	// swipeRefreshLayout.setRefreshing(false);
-	// }
-	// }, 6 * 1000);
-	// }
-
-	private void getRtParam(List<Group> groups) {
-		Log.i(TAG, "getRtInfo");
-		if (!mNetAndGpsUtil.isNetworkAvailable() || groups == null)
-			return;
-		for (Group group : groups) {
-			if (group.getChildrenCount() <= 0)
-				continue;
-			List<Child> children = group.getChildren();
-			for (Child child : children) {
-				if (child.getOfflineID() <= 0) {
-					Map<String, String> showText = new HashMap<String, String>();
-					showText.put("itemsText", "<font color=\"grey\">" + "未开通"
-							+ "</font>");
-					if (child != null) {
-						child.setRtInfo(showText);
-						child.setDataChanged(true);
-						child.setRtRank(Child.NOTEXIST);
-					}
-					mAllConcernAdapter.notifyDataSetChanged();
-
-				} else {
-					try {
-						getRtInfo(child);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-	}
 
 	private void sortGroup() {
 		for (Group group : mGroups)
@@ -313,7 +284,7 @@ public class AllConcernFragSwipe extends BaseFragment {
 //		Log.i("OKHTTP", "url " + Url);// 创建okHttpClient对象
 		OkHttpClient mOkHttpClient = new OkHttpClient();
 		// 创建一个Request
-		final com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder()
+		final Request request = new Request.Builder()
 				.url(Url).build();
 		// new call
 		Call call = mOkHttpClient.newCall(request);
@@ -321,8 +292,7 @@ public class AllConcernFragSwipe extends BaseFragment {
 		call.enqueue(new Callback() {
 
 			@Override
-			public void onFailure(com.squareup.okhttp.Request arg0,
-					IOException arg1) {
+			public void onFailure(Call call, IOException e) {
 				// TODO Auto-generated method stub
 				// Log.i(TAG, "onFailure: " + arg0.body().toString());
 				if (child != null) {
@@ -351,9 +321,8 @@ public class AllConcernFragSwipe extends BaseFragment {
 			}
 
 			@Override
-			public void onResponse(com.squareup.okhttp.Response arg0)
-					throws IOException {
-				// TODO Auto-generated method stub
+			public void onResponse(Call call, Response arg0) throws IOException {
+// TODO Auto-generated method stub
 				try {
 					String response = arg0.body().string();
 					// Log.i("OKHTTP", "response " + response);
@@ -436,7 +405,7 @@ public class AllConcernFragSwipe extends BaseFragment {
 		// 创建okHttpClient对象
 		OkHttpClient mOkHttpClient = new OkHttpClient();
 		// 创建一个Request
-		final com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder()
+		final Request request = new Request.Builder()
 				.url(url).build();
 		// new call
 		Call call = mOkHttpClient.newCall(request);
@@ -444,8 +413,7 @@ public class AllConcernFragSwipe extends BaseFragment {
 		call.enqueue(new Callback() {
 
 			@Override
-			public void onFailure(com.squareup.okhttp.Request arg0,
-					IOException arg1) {
+			public void onFailure(Call call, IOException e) {
 				// TODO Auto-generated method stub
 				// Log.i(TAG, "onFailure: " + arg0.body().toString());
 				if (child != null) {
@@ -475,9 +443,7 @@ public class AllConcernFragSwipe extends BaseFragment {
 			}
 
 			@Override
-			public void onResponse(com.squareup.okhttp.Response arg0)
-					throws IOException {
-				// TODO Auto-generated method stub
+			public void onResponse(Call call, Response arg0) throws IOException {
 				try {
 					String response = arg0.body().string();
 //					Log.i(TAG, "onResponse: " + response);
@@ -583,7 +549,7 @@ public class AllConcernFragSwipe extends BaseFragment {
 			
 				} else
 					mVolleyNetwork.getNearestBusWithLineAndOneStation(LineID,
-							StationID, new requestListener() {
+							StationID, new VolleyNetwork.requestListener() {
 
 								@Override
 								public void onSuccess(JSONObject data) {
@@ -940,7 +906,7 @@ public class AllConcernFragSwipe extends BaseFragment {
 						list.add(map);
 					}
 				}
-				mVolleyNetwork.upLoadRtInfo(uploadJson, new upLoadListener() {
+				mVolleyNetwork.upLoadRtInfo(uploadJson, new VolleyNetwork.upLoadListener() {
 
 					@Override
 					public void onSuccess() {
