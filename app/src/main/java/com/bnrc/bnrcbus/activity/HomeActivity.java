@@ -256,7 +256,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
 
     @Override
     public void onPopClick(Child child) {
-        Log.i("pop", "onPopClick: ");
         mChild = child;
         mCanversLayout = (RelativeLayout) findViewById(R.id.rlayout_shadow);
         menuWindow = new SelectPicPopupWindow(HomeActivity.this, mChild,
@@ -311,6 +310,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
             }
             menuWindow.dismiss();
             mFragment.refresh();
+            Log.i("refresh", "refreshed!");
         }
     };
 }

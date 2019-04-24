@@ -36,7 +36,7 @@ public class HomeFragment extends BaseFragment {
     private ViewpagerIndicator indicator;
     private NoScrollViewPager viewPager;
     private VpAdapter mAdapter;
-    private List<Fragment> mFragment;
+    private List<BaseFragment> mFragment;
     private List<String> mTitle;
     private TextView search_view;
 
@@ -108,6 +108,18 @@ public class HomeFragment extends BaseFragment {
         //设置indicator
         indicator = mContentView.findViewById(R.id.indicator);
         indicator.setViewPager(viewPager);
+    }
+
+
+    // 刷新实时数据
+    @Override
+    public void refresh() {
+        if (this != null && !this.isDetached() && this.isVisible()) {
+            if (mFragment == null)
+                return;
+            for (BaseFragment frag : mFragment)
+                frag.refresh();
+        }
     }
 
 }

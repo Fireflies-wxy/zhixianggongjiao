@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -276,7 +277,9 @@ public class NearFragment extends BaseFragment{
 
     @Override
     public void refresh() {
-        mNearAdapter.notifyDataSetChanged();
+
+    	mNearAdapter.notifyDataSetChanged();
+
     } //此行仅对适配器起作用
 
     // 刷新实时数据
@@ -1007,12 +1010,13 @@ public class NearFragment extends BaseFragment{
     public void onAttach(Activity activity) {
         // TODO Auto-generated method stub
         super.onAttach(activity);
-        mChooseListener = (IPopWindowListener) activity;
+		mChooseListener = (IPopWindowListener) activity;
         Log.i(TAG, TAG + " onAttach");
 
     }
 
-    @Override
+
+	@Override
     public void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
