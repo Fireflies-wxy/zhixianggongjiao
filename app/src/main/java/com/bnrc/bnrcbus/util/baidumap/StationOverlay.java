@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
-import com.bnrc.bnrcbus.activity.BuslineMapView;
+import com.bnrc.bnrcbus.activity.BuslineMapActivity;
 
 import org.json.JSONException;
 
@@ -25,7 +25,7 @@ public class StationOverlay extends BusLineOverlay {
 	// @Override
 	public boolean onBusStationClick(int index) {
 		try {
-			((BuslineMapView) mCtx).showStationView(index);
+			((BuslineMapActivity) mCtx).showStationView(index);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

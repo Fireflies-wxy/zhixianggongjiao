@@ -1,4 +1,4 @@
-package com.bnrc.bnrcsdk.ui.pullloadmenulistciew;
+package com.bnrc.bnrcsdk.ui.pullloadmenulistview;
 
 /**
  * Created by frank on 15/12/26.

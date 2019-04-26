@@ -90,12 +90,13 @@
         <activity
             android:name=".activity.RegisterActivity"
             android:launchMode="singleInstance" />
-        <activity android:name=".activity.BuslineListViewParallel" />
+        <activity android:name=".activity.BuslineListActivity" />
         <activity android:name=".activity.CorrectMistakeActivity" />
-        <activity android:name=".activity.BuslineMapView" />
-        <activity android:name=".activity.StationListView" />
+        <activity android:name=".activity.BuslineMapActivity" />
+        <activity android:name=".activity.StationListActivity" />
         <activity android:name=".activity.SettingView" />
-        <activity android:name=".activity.SearchBuslineView" />
+        <activity android:name=".activity.AlertSelectListActivity" />
+        <activity android:name=".activity.SearchActivity" />
 
         <receiver
             android:name=".MyBroadcastReceiver"

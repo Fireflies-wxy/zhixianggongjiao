@@ -58,8 +58,8 @@ import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenu;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuCreator;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuExpandableListView;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuItem;
-import com.bnrc.bnrcsdk.ui.pullloadmenulistciew.IPullRefresh;
-import com.bnrc.bnrcsdk.ui.pullloadmenulistciew.PullLoadMenuListView;
+import com.bnrc.bnrcsdk.ui.pullloadmenulistview.IPullRefresh;
+import com.bnrc.bnrcsdk.ui.pullloadmenulistview.PullLoadMenuListView;
 import com.bnrc.bnrcsdk.util.AnimationUtil;
 
 import org.json.JSONArray;
@@ -87,8 +87,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class StationListView extends BaseActivity implements IPopWindowListener{
-	private static final String TAG = StationListView.class.getSimpleName();
+public class StationListActivity extends BaseActivity implements IPopWindowListener{
+	private static final String TAG = StationListActivity.class.getSimpleName();
 	public PCDataBaseHelper mDataManager = null;
 	private NetAndGpsUtil mNetAndGpsUtil;
 	private String StationName;
@@ -141,15 +141,15 @@ public class StationListView extends BaseActivity implements IPopWindowListener{
 			// TODO Auto-generated method stub
 			Group group = mGroups.get(paramInt1);
 			Child child = group.getChildItem(paramInt2);
-			Intent intent = new Intent(StationListView.this,
-					BuslineListViewParallel.class);
+			Intent intent = new Intent(StationListActivity.this,
+					BuslineListActivity.class);
 			intent.putExtra("LineID", child.getLineID());
 			intent.putExtra("StationID", child.getStationID());
 			intent.putExtra("FullName", child.getLineFullName());
 			intent.putExtra("Sequence", child.getSequence());
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(intent);
-			AnimationUtil.activityZoomAnimation(StationListView.this);
+			AnimationUtil.activityZoomAnimation(StationListActivity.this);
 			return false;
 		}
 
@@ -159,7 +159,7 @@ public class StationListView extends BaseActivity implements IPopWindowListener{
 		public void create(SwipeMenu menu) {
 			switch (menu.getViewType()) {
 			case NearAdapter.FAV:
-				SwipeMenuItem item1 = new SwipeMenuItem(StationListView.this);
+				SwipeMenuItem item1 = new SwipeMenuItem(StationListActivity.this);
 				// item1.setBackground(getResources().getColor(R.color.blue));
 				item1.setBackground(R.drawable.bg_circle_drawable_notstar);
 				// item1.setIcon(R.drawable.select_star);
@@ -170,7 +170,7 @@ public class StationListView extends BaseActivity implements IPopWindowListener{
 				menu.addMenuItem(item1);
 				break;
 			case NearAdapter.NORMAL:
-				SwipeMenuItem item2 = new SwipeMenuItem(StationListView.this);
+				SwipeMenuItem item2 = new SwipeMenuItem(StationListActivity.this);
 				// item1.setBackground(getResources().getColor(R.color.colorPrimaryDark));
 				item2.setBackground(R.drawable.bg_circle_drawable);
 				// item2.setIcon(R.drawable.not_select_star);
@@ -208,7 +208,7 @@ public class StationListView extends BaseActivity implements IPopWindowListener{
 
 		mLocationUtil = LocationUtil.getInstance(getApplicationContext());
 		mLocationUtil.startLocation();
-		mDataManager = PCDataBaseHelper.getInstance(StationListView.this);
+		mDataManager = PCDataBaseHelper.getInstance(StationListActivity.this);
 		mNetAndGpsUtil = NetAndGpsUtil
 				.getInstance(this.getApplicationContext());
 		mSharePrefrenceUtil = SharedPreferenceUtil
@@ -233,7 +233,7 @@ public class StationListView extends BaseActivity implements IPopWindowListener{
 
 		tv_station_title.setText(StationName);
 
-		mUserDB = PCUserDataDBHelper.getInstance(StationListView.this);
+		mUserDB = PCUserDataDBHelper.getInstance(StationListActivity.this);
 		mVolleyNetwork = VolleyNetwork.getInstance(this);
 		mStationListView = (PullLoadMenuListView) findViewById(R.id.explistview_station);
 		mGroups = new ArrayList<Group>();
@@ -1217,7 +1217,7 @@ public class StationListView extends BaseActivity implements IPopWindowListener{
 		Log.i("pop", "onPopClick: ");
 		mChild = child;
 		mCanversLayout = (RelativeLayout) findViewById(R.id.rlayout_shadow);
-		menuWindow = new SelectPicPopupWindow(StationListView.this, mChild,
+		menuWindow = new SelectPicPopupWindow(StationListActivity.this, mChild,
 				mPopItemListener);
 		menuWindow.setOnDismissListener(new OnDismissListener() {
 			@Override
@@ -1226,7 +1226,7 @@ public class StationListView extends BaseActivity implements IPopWindowListener{
 			}
 		});
 		menuWindow.showAtLocation(
-				StationListView.this.findViewById(R.id.DLayout), Gravity.BOTTOM
+				StationListActivity.this.findViewById(R.id.DLayout), Gravity.BOTTOM
 						| Gravity.CENTER_HORIZONTAL, 0, 0);
 		menuWindow.setFocusable(true);
 		menuWindow.setOutsideTouchable(false);
@@ -1317,7 +1317,7 @@ public class StationListView extends BaseActivity implements IPopWindowListener{
 	private void initTitleRightLayout() {
 		//mAbTitleBar.clearRightView();
 
-		View rightViewApp = LayoutInflater.from(StationListView.this).inflate(
+		View rightViewApp = LayoutInflater.from(StationListActivity.this).inflate(
 				R.layout.app_btn, null);
 
 		final Button appBtn = (Button) rightViewApp.findViewById(R.id.appBtn);
@@ -1341,14 +1341,14 @@ public class StationListView extends BaseActivity implements IPopWindowListener{
 			public void onClick(View v) {
 				if (mGroups == null || mGroups.size() <= 0)
 					return;
-				Intent intent = new Intent(StationListView.this,
-						AlertSelectListView.class);
+				Intent intent = new Intent(StationListActivity.this,
+						AlertSelectListActivity.class);
 				// Bundle bundle = new Bundle();
 				// bundle.putSerializable("DATA", (Serializable) mGroups);
 				// intent.putExtras(bundle);
 				intent.putExtra("StationName", StationName);
 				startActivity(intent);
-				AnimationUtil.activityZoomAnimation(StationListView.this);
+				AnimationUtil.activityZoomAnimation(StationListActivity.this);
 			}
 
 		});

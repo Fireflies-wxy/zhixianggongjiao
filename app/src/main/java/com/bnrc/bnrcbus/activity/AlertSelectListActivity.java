@@ -5,25 +5,24 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.bnrc.bnrcbus.R;
 import com.bnrc.bnrcbus.activity.base.BaseActivity;
-import com.bnrc.bnrcbus.adapter.AlertAdapter;
+import com.bnrc.bnrcbus.adapter.ConcernAdapter;
 import com.bnrc.bnrcbus.module.rtBus.Child;
 import com.bnrc.bnrcbus.module.rtBus.Group;
 import com.bnrc.bnrcbus.util.database.PCDataBaseHelper;
 import com.bnrc.bnrcbus.util.database.PCUserDataDBHelper;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuExpandableListView;
-import com.bnrc.bnrcsdk.ui.pullloadmenulistciew.PullLoadMenuListView;
+import com.bnrc.bnrcsdk.ui.pullloadmenulistview.PullLoadMenuListView;
 
 import java.util.List;
 
-public class AlertSelectListView extends BaseActivity {
-	private static final String TAG = AlertSelectListView.class.getSimpleName();
+public class AlertSelectListActivity extends BaseActivity {
+	private static final String TAG = AlertSelectListActivity.class.getSimpleName();
 	public PCDataBaseHelper mDataManager = null;
 	private String StationName;
 	private List<Group> mGroups = null;
@@ -31,7 +30,7 @@ public class AlertSelectListView extends BaseActivity {
 	private PCDataBaseHelper mDataBaseHelper = null;
 	private loadDataBaseTask mTask;
 	private PullLoadMenuListView mAlertListView;
-	private AlertAdapter mAlertAdapter;
+	private ConcernAdapter mAlertAdapter;
 	// 定义Handler对象
 	private Handler mHandler = new Handler();
 	private TextView alert_menu_view,tv_alert_title;
@@ -87,9 +86,9 @@ public class AlertSelectListView extends BaseActivity {
 		mDataBaseHelper = PCDataBaseHelper.getInstance(this);
 		StationName = getIntent().getStringExtra("StationName");
 		mAlertListView = (PullLoadMenuListView) findViewById(R.id.explistview_alert_station);
-		mAlertAdapter = new AlertAdapter(mGroups, this);
+		mAlertAdapter = new ConcernAdapter(mGroups, this);
 		mAlertListView.setAdapter(mAlertAdapter);
-		mAlertAdapter.setType(AlertAdapter.DONTADDALERT);
+		mAlertAdapter.setType(ConcernAdapter.DONTADDALERT);
 		mAlertListView.setOnGroupExpandListener(mOnGroupExpandListener);
 		mAlertListView.setOnChildClickListener(mOnChildExpandListener);
 		mAlertListView.setPullToRefreshEnable(false);

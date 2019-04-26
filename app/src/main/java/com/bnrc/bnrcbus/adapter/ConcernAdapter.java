@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bnrc.bnrcbus.R;
-import com.bnrc.bnrcbus.activity.AlertSelectListView;
+import com.bnrc.bnrcbus.activity.AlertSelectListActivity;
 import com.bnrc.bnrcbus.module.rtBus.Child;
 import com.bnrc.bnrcbus.module.rtBus.Group;
 import com.bnrc.bnrcbus.util.database.PCUserDataDBHelper;
@@ -23,19 +23,19 @@ import com.bnrc.bnrcsdk.util.AnimationUtil;
 
 import java.util.List;
 
-public class AlertAdapter extends BaseExpandableListAdapter {
+public class ConcernAdapter extends BaseExpandableListAdapter {
 	public static final int NULL = 0;
 	public static final int FAV = 1;
 	public static final int NORMAL = 2;
 	private Context mContext;
-	private static final String TAG = AlertAdapter.class.getSimpleName();
+	private static final String TAG = ConcernAdapter.class.getSimpleName();
 	private List<Group> groups;
 	private LayoutInflater inflater;
 	public static final int ADDALERT = 11;
 	public static final int DONTADDALERT = 12;
 	private int type = ADDALERT;
 
-	public AlertAdapter(List<Group> groups, Context context) {
+	public ConcernAdapter(List<Group> groups, Context context) {
 		this.groups = groups;
 		this.mContext = context;
 		inflater = LayoutInflater.from(this.mContext);
@@ -197,7 +197,7 @@ public class AlertAdapter extends BaseExpandableListAdapter {
 					if (group == null)
 						return;
 					Intent intent = new Intent(mContext,
-							AlertSelectListView.class);
+							AlertSelectListActivity.class);
 					intent.putExtra("StationName", group.getStationName());
 					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					mContext.startActivity(intent);

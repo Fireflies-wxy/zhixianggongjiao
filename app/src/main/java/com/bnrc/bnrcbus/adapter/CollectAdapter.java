@@ -21,8 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bnrc.bnrcbus.R;
-import com.bnrc.bnrcbus.activity.BuslineListViewParallel;
-import com.bnrc.bnrcbus.activity.StationListView;
+import com.bnrc.bnrcbus.activity.BuslineListActivity;
+import com.bnrc.bnrcbus.activity.StationListActivity;
 import com.bnrc.bnrcbus.module.rtBus.Child;
 import com.bnrc.bnrcbus.module.rtBus.Group;
 import com.bnrc.bnrcbus.util.NetAndGpsUtil;
@@ -202,7 +202,7 @@ public class CollectAdapter extends BaseExpandableListAdapter {
 					// TODO Auto-generated method stub
 					Group group = groups.get(groupPosition);
 					Child child = group.getChildItem(childPosition);
-					Intent intent = new Intent(mContext, BuslineListViewParallel.class);
+					Intent intent = new Intent(mContext, BuslineListActivity.class);
 					intent.putExtra("LineID", child.getLineID());
 					intent.putExtra("StationID", child.getStationID());
 					intent.putExtra("FullName", child.getLineFullName());
@@ -327,7 +327,7 @@ public class CollectAdapter extends BaseExpandableListAdapter {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent stationIntent = new Intent(mContext,
-						StationListView.class);
+						StationListActivity.class);
 
 				stationIntent.putExtra("StationName", group.getStationName());
 				stationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

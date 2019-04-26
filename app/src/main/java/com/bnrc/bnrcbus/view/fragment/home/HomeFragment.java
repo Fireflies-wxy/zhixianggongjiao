@@ -6,16 +6,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bnrc.bnrcbus.R;
-import com.bnrc.bnrcbus.activity.SearchBuslineView;
+import com.bnrc.bnrcbus.activity.SearchActivity;
 import com.bnrc.bnrcbus.view.fragment.BaseFragment;
 import com.bnrc.bnrcsdk.ui.viewpager.NoScrollViewPager;
 import com.bnrc.bnrcsdk.ui.viewpager.ViewpagerIndicator;
@@ -68,7 +66,7 @@ public class HomeFragment extends BaseFragment {
                 /** 加这个判断，防止该事件被执行两次 */
                 if (v.getId() == R.id.search_view) {
                     Intent intent = new Intent(getActivity(),
-                            SearchBuslineView.class);   //搜索界面
+                            SearchActivity.class);   //搜索界面
                     startActivity(intent);
                 }
             }

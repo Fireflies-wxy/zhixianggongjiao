@@ -1,9 +1,18 @@
 package com.bnrc.bnrcbus.activity;
 
-import android.content.Intent;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -16,18 +25,17 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMap.OnMapClickListener;
 import com.baidu.mapapi.map.BaiduMap.OnMapLoadedCallback;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapPoi;
-import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+
 import com.baidu.mapapi.search.busline.BusLineResult;
 import com.baidu.mapapi.search.busline.BusLineSearch;
 import com.baidu.mapapi.search.busline.BusLineSearchOption;
@@ -42,33 +50,29 @@ import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.utils.CoordinateConverter;
+
+import android.content.Intent;
+import android.view.Gravity;
+
+
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.MapView;
 import com.bnrc.bnrcbus.R;
 import com.bnrc.bnrcbus.activity.base.BaseActivity;
 import com.bnrc.bnrcbus.module.rtBus.Child;
 import com.bnrc.bnrcbus.network.MyVolley;
 import com.bnrc.bnrcbus.util.LocationUtil;
 import com.bnrc.bnrcbus.util.MyCipher;
-import com.bnrc.bnrcbus.util.SharedPreferenceUtil;
+import com.bnrc.bnrcbus.util.SharePrefrenceUtil;
 import com.bnrc.bnrcbus.util.baidumap.StationOverlay;
 import com.bnrc.bnrcbus.util.database.PCDataBaseHelper;
 import com.bnrc.bnrcbus.util.database.PCUserDataDBHelper;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.XML;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-public class BuslineMapView extends BaseActivity implements
-        OnGetPoiSearchResultListener, OnGetBusLineSearchResultListener,
+public class BuslineMapActivity extends BaseActivity implements
+		OnGetPoiSearchResultListener, OnGetBusLineSearchResultListener,
 		BaiduMap.OnMapClickListener {
-	private static final String TAG = BuslineMapView.class.getSimpleName();
+	private static final String TAG = BuslineMapActivity.class.getSimpleName();
 	private String LineName = "";
 	private String StartStation = "";
 	private String EndStation = "";
@@ -94,74 +98,55 @@ public class BuslineMapView extends BaseActivity implements
 	private FrameLayout busContainer;
 	private int stationItemWidth = 0;
 	private TimerTask mTask;
-//	private AbTitleBar mAbTitleBar;
-	private SharedPreferenceUtil mSharePrefrenceUtil;
+	private SharePrefrenceUtil mSharePrefrenceUtil;
 	private Timer mTimer;
-
-	private TextView tv_map_title,map_menu_view;
+	private TextView mTitleText;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		SDKInitializer.initialize(getApplicationContext());
 		setContentView(R.layout.busline_map_view);
 
-		tv_map_title = findViewById(R.id.tv_map_title);
-		map_menu_view = findViewById(R.id.map_menu_view);
-		map_menu_view.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				switch (view.getId()){
-					case R.id.map_menu_view:
-						finish();
-						break;
-				}
-			}
-		});
-
 		Intent intent = getIntent();
 
 		LineName = intent.getStringExtra("LineName");
 		StartStation = intent.getStringExtra("StartStation");
 		EndStation = intent.getStringExtra("EndStation");
-		String FullName = LineName + " (" + StartStation + " - " + EndStation + ")";
-		tv_map_title.setText(FullName);
 		LineID = intent.getIntExtra("LineID", 0);
 		OfflineID = intent.getIntExtra("OfflineID", 0);
-		mLocationUtil = LocationUtil.getInstance(BuslineMapView.this);
-		dabase = PCDataBaseHelper.getInstance(BuslineMapView.this);
-		userdabase = PCUserDataDBHelper.getInstance(BuslineMapView.this);
+
+		String FullName = LineName + " (" + StartStation + " - " + EndStation
+				+ ")";
+		mTitleText = findViewById(R.id.tv_map_title);
+		mTitleText.setText(FullName);
+
+		mLocationUtil = LocationUtil.getInstance(BuslineMapActivity.this);
+		dabase = PCDataBaseHelper.getInstance(BuslineMapActivity.this);
+		userdabase = PCUserDataDBHelper.getInstance(BuslineMapActivity.this);
 		// 加载地图和定位
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
 		// 开启交通图
 		mBaiduMap.setTrafficEnabled(false);
 		mBaiduMap.setOnMapClickListener(this);
+
 		mSearch = PoiSearch.newInstance();
 		mSearch.setOnGetPoiSearchResultListener(this);
+
 		mScrollView = (HorizontalScrollView) findViewById(R.id.mScrollView);
+
 		mBusLineSearch = BusLineSearch.newInstance();
 		mBusLineSearch.setOnGetBusLineSearchResultListener(this);
+
 		poiIDList = new ArrayList<String>();
 		poiIndex = 0;
 		stationContainer = (LinearLayout) findViewById(R.id.stationList);
 		busContainer = (FrameLayout) findViewById(R.id.busList);
 		stationList = dabase.acquireStationsWithBuslineID(LineID);
+
 		busArrayList = new ArrayList<View>();
 		optionList = new ArrayList<Marker>();
 		mCoordConventer = new CoordinateConverter();
-
-		tv_map_title = findViewById(R.id.tv_map_title);
-		map_menu_view = findViewById(R.id.map_menu_view);
-		map_menu_view.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				switch (view.getId()){
-					case R.id.map_menu_view:
-						finish();
-						break;
-				}
-			}
-		});
 
 		mScrollView.setVisibility(View.GONE);
 		mBaiduMap.setOnMapLoadedCallback(new OnMapLoadedCallback() {
@@ -191,7 +176,7 @@ public class BuslineMapView extends BaseActivity implements
 				});
 			}
 		};
-		mSharePrefrenceUtil = SharedPreferenceUtil.getInstance(this
+		mSharePrefrenceUtil = SharePrefrenceUtil.getInstance(this
 				.getApplicationContext());
 		String value = mSharePrefrenceUtil.getValue("refreshFrequency", "30秒");
 		int timeInternal = Integer.parseInt(value.substring(0,
@@ -237,52 +222,6 @@ public class BuslineMapView extends BaseActivity implements
 				.uid(LineName)));
 	}
 
-	private void loadBuslineData() {
-
-		int j = stationList.size();
-		stationItems = new ArrayList<Object>();
-		for (int i = 0; i < j; i++) {
-			View stationItem = View.inflate(BuslineMapView.this,
-					R.layout.station_item_view, null);
-			if (i == 0) {
-				int w = View.MeasureSpec.makeMeasureSpec(0,
-						View.MeasureSpec.UNSPECIFIED);
-				int h = View.MeasureSpec.makeMeasureSpec(0,
-						View.MeasureSpec.UNSPECIFIED);
-				stationItem.measure(w, h);
-				stationItemWidth = stationItem.getMeasuredWidth();
-			}
-			TextView title = (TextView) stationItem
-					.findViewById(R.id.tv_waitStation);
-			Button stationImg = (Button) stationItem
-					.findViewById(R.id.stationImg);
-			Child station = stationList.get(i);
-			title.setText(station.getStationName());
-			stationItems.add(stationItem);
-			stationContainer.addView(stationItem);
-			stationImg.setTag((i + 1024) + "");
-
-			stationImg.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
-					int tag = Integer.parseInt(arg0.getTag().toString()) - 1024;
-					// Intent intent = null;
-					// Intent intent = new Intent(BuslineMapView.this,
-					// StationInformationView.class);
-					// // 在意图中传递数据
-					// Child station = stations.get(tag);
-					// intent.putExtra("title", station.getStationName());
-					// intent.putExtra("latitude", station.getLatitude());
-					// intent.putExtra("longitude", station.getLongitude());
-					// // 启动意图
-					// startActivity(intent);
-				}
-			});
-		}
-
-	}
 
 	@Override
 	public void onPause() {
@@ -291,8 +230,6 @@ public class BuslineMapView extends BaseActivity implements
 			mTask.cancel();
 		mTimer.cancel();
 		mMapView.onPause();
-//		MobclickAgent.onPageEnd("SplashScreen");
-//		MobclickAgent.onPause(this);
 	}
 
 	@Override
@@ -300,9 +237,6 @@ public class BuslineMapView extends BaseActivity implements
 		// TODO Auto-generated method stub
 		super.onResume();
 		mMapView.onResume();
-
-//		MobclickAgent.onPageStart("SplashScreen");
-//		MobclickAgent.onResume(this);
 	}
 
 	@Override
@@ -325,11 +259,12 @@ public class BuslineMapView extends BaseActivity implements
 		route = result;
 
 		StationOverlay overlay = new StationOverlay(mBaiduMap,
-				BuslineMapView.this);
+				BuslineMapActivity.this);
 		mBaiduMap.setOnMarkerClickListener(overlay);
 		overlay.setData(result);
 		overlay.addToMap();
 		overlay.zoomToSpan();
+		Log.i(TAG, "overlay ");
 		// getRtInfo();
 		try {
 			getRealtimeInfo();
@@ -343,8 +278,8 @@ public class BuslineMapView extends BaseActivity implements
 	public void onGetPoiResult(PoiResult result) {
 
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-//			Toast.makeText(BuslineMapView.this, "抱歉，未找到结果", Toast.LENGTH_LONG)
-//					.show();
+			Toast.makeText(BuslineMapActivity.this, "抱歉，未找到结果", Toast.LENGTH_LONG)
+					.show();
 			return;
 		}
 		// 遍历所有poi，找到类型为公交线路的poi
@@ -357,6 +292,21 @@ public class BuslineMapView extends BaseActivity implements
 		}
 		SearchNextBusline(null);
 		route = null;
+	}
+
+	@Override
+	public void onGetPoiDetailResult(PoiDetailResult result) {
+
+	}
+
+	@Override
+	public void onGetPoiDetailResult(PoiDetailSearchResult poiDetailSearchResult) {
+
+	}
+
+	@Override
+	public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
+
 	}
 
 	@Override
@@ -373,8 +323,8 @@ public class BuslineMapView extends BaseActivity implements
 		// TODO Auto-generated method stub
 		if (route != null) {
 			if (index > 0 && index < route.getStations().size()) {
-				Toast toast = Toast.makeText(BuslineMapView.this, route
-						.getStations().get(index).getTitle(),
+				Toast toast = Toast.makeText(BuslineMapActivity.this, route
+								.getStations().get(index).getTitle(),
 						Toast.LENGTH_SHORT);
 				toast.show();
 			}
@@ -387,7 +337,7 @@ public class BuslineMapView extends BaseActivity implements
 	private void getRealtimeInfo()// 参数为全名
 			throws UnsupportedEncodingException {
 		if (OfflineID <= 0) {
-			Toast toast = Toast.makeText(BuslineMapView.this, "暂不支持该线路的实时信息！",
+			Toast toast = Toast.makeText(BuslineMapActivity.this, "暂不支持该线路的实时信息！",
 					Toast.LENGTH_SHORT);
 			toast.show();
 			return;
@@ -490,12 +440,12 @@ public class BuslineMapView extends BaseActivity implements
 
 					}
 				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						Log.e(TAG, error.getMessage(), error);
-					}
-				});
-		MyVolley.sharedVolley(BuslineMapView.this).getRequestQueue()
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.e(TAG, error.getMessage(), error);
+			}
+		});
+		MyVolley.sharedVolley(BuslineMapActivity.this).getRequestQueue()
 				.add(request);
 
 	}
@@ -514,21 +464,6 @@ public class BuslineMapView extends BaseActivity implements
 			// 延时1000ms后执行，1000 ms执行一次
 			// 退出计时器
 		}
-	}
-
-	@Override
-	public void onGetPoiDetailResult(PoiDetailResult result) {
-
-	}
-
-	@Override
-	public void onGetPoiDetailResult(PoiDetailSearchResult poiDetailSearchResult) {
-
-	}
-
-	@Override
-	public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
-
 	}
 
 }

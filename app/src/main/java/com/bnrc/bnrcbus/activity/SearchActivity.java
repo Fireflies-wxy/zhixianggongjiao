@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,8 +35,8 @@ import java.util.List;
 
 import com.bnrc.bnrcbus.R;
 
-public class SearchBuslineView extends BaseActivity implements ItemDelListener {
-	private static final String TAG = SearchBuslineView.class.getSimpleName();
+public class SearchActivity extends BaseActivity implements ItemDelListener {
+	private static final String TAG = SearchActivity.class.getSimpleName();
 	private ImageView mDeleteView;
 	private EditText mSearchEdt;
 	private Button mSearchBtn;
@@ -67,8 +68,8 @@ public class SearchBuslineView extends BaseActivity implements ItemDelListener {
 		// 接受软键盘输入的编辑文本或其它视图
 		inputMethodManager.showSoftInput(mSearchEdt,
 				InputMethodManager.SHOW_FORCED);
-		mSearchDB = PCDataBaseHelper.getInstance(SearchBuslineView.this);
-		mUserDB = PCUserDataDBHelper.getInstance(SearchBuslineView.this);
+		mSearchDB = PCDataBaseHelper.getInstance(SearchActivity.this);
+		mUserDB = PCUserDataDBHelper.getInstance(SearchActivity.this);
 		mListData = new ArrayList<>();
 		mTempData = new ArrayList<>();
 		mHistory = new ArrayList<>();
@@ -138,7 +139,7 @@ public class SearchBuslineView extends BaseActivity implements ItemDelListener {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				InputMethodManager imm = (InputMethodManager) getSystemService(SearchBuslineView.this.INPUT_METHOD_SERVICE);
+				InputMethodManager imm = (InputMethodManager) getSystemService(SearchActivity.this.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(mSearchEdt.getWindowToken(), 0);
 				if (mSearchEdt.getText().length() < 1) {
 					Toast toast = Toast.makeText(getApplicationContext(),
@@ -156,17 +157,17 @@ public class SearchBuslineView extends BaseActivity implements ItemDelListener {
 				historyItem item = mListData.get(position);
 				switch (item.getType()) {
 				case Constants.STATION:
-					Intent stationIntent = new Intent(SearchBuslineView.this,
-							StationListView.class);
+					Intent stationIntent = new Intent(SearchActivity.this,
+							StationListActivity.class);
 					stationIntent.putExtra("StationName", item.getStationName());
 					startActivity(stationIntent);
-					AnimationUtil.activityZoomAnimation(SearchBuslineView.this);
+					AnimationUtil.activityZoomAnimation(SearchActivity.this);
 					item.setType(Constants.STATION);
 					mUserDB.addSearchRecord(item);
 					break;
 				case Constants.BUSLINE:
-					Intent buslineIntent = new Intent(SearchBuslineView.this,
-							BuslineListViewParallel.class);
+					Intent buslineIntent = new Intent(SearchActivity.this,
+							BuslineListActivity.class);
 					int LineID = item.getLineID();
 					int StationID = 0;
 					int Sequence = 1;
@@ -174,7 +175,7 @@ public class SearchBuslineView extends BaseActivity implements ItemDelListener {
 					buslineIntent.putExtra("StationID", StationID);
 					buslineIntent.putExtra("Sequence", Sequence);
 					startActivity(buslineIntent);
-					AnimationUtil.activityZoomAnimation(SearchBuslineView.this);
+					AnimationUtil.activityZoomAnimation(SearchActivity.this);
 					item.setType(Constants.BUSLINE);
 					mUserDB.addSearchRecord(item);
 					break;
@@ -276,7 +277,7 @@ public class SearchBuslineView extends BaseActivity implements ItemDelListener {
 		mNoHistory.setVisibility(View.GONE);
 		mListViewAdapter.notifyDataSetChanged();
 		if (mListData == null || mListData.size() <= 0)
-			Toast.makeText(this, "没有相关站点或线路，请重新输入关键字！", Toast.LENGTH_SHORT)
+			Toast.makeText(getApplicationContext(), "没有相关站点或线路，请重新输入关键字！", Toast.LENGTH_SHORT)
 					.show();
 	}
 

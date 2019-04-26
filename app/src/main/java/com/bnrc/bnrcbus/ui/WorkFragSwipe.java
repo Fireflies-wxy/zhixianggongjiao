@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.bnrc.bnrcbus.R;
-import com.bnrc.bnrcbus.activity.BuslineListViewParallel;
+import com.bnrc.bnrcbus.activity.BuslineListActivity;
 import com.bnrc.bnrcbus.adapter.CollectAdapter;
 import com.bnrc.bnrcbus.adapter.IPopWindowListener;
 import com.bnrc.bnrcbus.adapter.NearAdapter;
@@ -40,8 +39,8 @@ import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenu;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuCreator;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuExpandableListView;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuItem;
-import com.bnrc.bnrcsdk.ui.pullloadmenulistciew.IPullRefresh;
-import com.bnrc.bnrcsdk.ui.pullloadmenulistciew.PullLoadMenuListView;
+import com.bnrc.bnrcsdk.ui.pullloadmenulistview.IPullRefresh;
+import com.bnrc.bnrcsdk.ui.pullloadmenulistview.PullLoadMenuListView;
 import com.bnrc.bnrcsdk.util.AnimationUtil;
 
 
@@ -145,7 +144,7 @@ public class WorkFragSwipe extends BaseFragment {
 			// TODO Auto-generated method stub
 			Group group = mGroups.get(paramInt1);
 			Child child = group.getChildItem(paramInt2);
-			Intent intent = new Intent(mContext, BuslineListViewParallel.class);
+			Intent intent = new Intent(mContext, BuslineListActivity.class);
 			intent.putExtra("LineID", child.getLineID());
 			intent.putExtra("StationID", child.getStationID());
 			intent.putExtra("FullName", child.getLineFullName());
@@ -241,7 +240,7 @@ public class WorkFragSwipe extends BaseFragment {
 					if (addr != null && addr.length() > 0)
 						position = addr;
 				}
-				Toast.makeText(mContext, position, Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext.getApplicationContext(), position, Toast.LENGTH_SHORT).show();
 				mWorkConcernExplistview.stopRefresh();
 			}
 		}, 3000);

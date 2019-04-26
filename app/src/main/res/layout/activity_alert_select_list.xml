@@ -40,8 +40,9 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
-    <com.bnrc.bnrcsdk.ui.pullloadmenulistciew.PullLoadMenuListView
+    <com.bnrc.bnrcsdk.ui.pullloadmenulistview.PullLoadMenuListView
         android:id="@+id/explistview_alert_station"
+        android:layout_below="@+id/alert_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="#00000000"

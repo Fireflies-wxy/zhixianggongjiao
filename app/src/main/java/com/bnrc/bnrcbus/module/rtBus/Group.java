@@ -16,6 +16,7 @@ public class Group implements Serializable {
 	private String[] LNs = {};
 	private String relations = "";
 	private String sameNameID = "";
+	private int stationStatus = 2; //候车拥挤度
 
 	public String getSameNameID() {
 		return sameNameID;
@@ -159,6 +160,15 @@ public class Group implements Serializable {
 	public void setStationName(String stationName) {
 		this.stationName = stationName;
 	}
+
+	public int getStationStatus() {
+		return stationStatus;
+	}
+
+	public void setStationStatus(int stationStatus) {
+		this.stationStatus = stationStatus;
+	}
+
 
 	public void openAllChildAlert() {
 		for (Child child : children)

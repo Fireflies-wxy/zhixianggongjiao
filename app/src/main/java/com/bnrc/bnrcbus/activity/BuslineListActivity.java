@@ -62,8 +62,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class BuslineListViewParallel extends BaseActivity {
-	private static final String TAG = BuslineListViewParallel.class
+public class BuslineListActivity extends BaseActivity {
+	private static final String TAG = BuslineListActivity.class
 			.getSimpleName();
 	public PCDataBaseHelper mDataBaseManager = null;
 	public PCUserDataDBHelper mUserDataBaseHelper = null;
@@ -109,7 +109,7 @@ public class BuslineListViewParallel extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		SDKInitializer.initialize(getApplicationContext());
-		setContentView(R.layout.busline_listview_parallel);
+		setContentView(R.layout.activity_buslinelist);
 		tv_busline_title = findViewById(R.id.tv_busline_title);
 		busline_menu_view = findViewById(R.id.busline_menu_view);
 		busline_menu_view.setOnClickListener(new OnClickListener() {
@@ -128,9 +128,9 @@ public class BuslineListViewParallel extends BaseActivity {
 		StationID = intent.getIntExtra("StationID", 0);
 		Sequence = intent.getIntExtra("Sequence", 0);
 		mDataBaseManager = PCDataBaseHelper
-				.getInstance(BuslineListViewParallel.this);
+				.getInstance(BuslineListActivity.this);
 		mUserDataBaseHelper = PCUserDataDBHelper
-				.getInstance(BuslineListViewParallel.this);
+				.getInstance(BuslineListActivity.this);
 		mNetAndGpsUtil = NetAndGpsUtil
 				.getInstance(this.getApplicationContext());
 
@@ -254,7 +254,7 @@ public class BuslineListViewParallel extends BaseActivity {
 	}
 
 	private void showSelectPopWindow(Child child) {
-		menuWindow = new SelectPicPopupWindow(BuslineListViewParallel.this,
+		menuWindow = new SelectPicPopupWindow(BuslineListActivity.this,
 				child, mPopItemListener);
 		menuWindow.setOnDismissListener(new OnDismissListener() {
 			@Override
@@ -263,7 +263,7 @@ public class BuslineListViewParallel extends BaseActivity {
 			}
 		});
 		menuWindow.showAtLocation(
-				BuslineListViewParallel.this.findViewById(R.id.rLayout),
+				BuslineListActivity.this.findViewById(R.id.rLayout),
 				Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 		menuWindow.setFocusable(true);
 		menuWindow.setOutsideTouchable(false);
@@ -299,7 +299,7 @@ public class BuslineListViewParallel extends BaseActivity {
 					return;
 				mSelectedChild = mStations.get(Sequence - 1);
 				int Type = PCUserDataDBHelper.getInstance(
-						BuslineListViewParallel.this).IsWhichKindFavInfo(
+						BuslineListActivity.this).IsWhichKindFavInfo(
 						LineID, StationID);
 				mSelectedChild.setType(Type);
 				showSelectPopWindow(mSelectedChild);
@@ -310,8 +310,8 @@ public class BuslineListViewParallel extends BaseActivity {
 				break;
 			case R.id.iv_map:
 				Log.i(TAG, "mViewInMap");
-				Intent intent = new Intent(BuslineListViewParallel.this,
-						BuslineMapView.class);
+				Intent intent = new Intent(BuslineListActivity.this,
+						BuslineMapActivity.class);
 				intent.putExtra("LineName", LineName);
 				intent.putExtra("StartStation", StartStation);
 				intent.putExtra("EndStation", EndStation);
@@ -319,14 +319,14 @@ public class BuslineListViewParallel extends BaseActivity {
 				intent.putExtra("OfflineID", OfflineID);
 				startActivity(intent);
 				AnimationUtil
-						.activityZoomAnimation(BuslineListViewParallel.this);
+						.activityZoomAnimation(BuslineListActivity.this);
 				break;
 			case R.id.lLayout_correct:
-				Intent corrIntent = new Intent(BuslineListViewParallel.this,
+				Intent corrIntent = new Intent(BuslineListActivity.this,
 						CorrectMistakeActivity.class);
 				startActivity(corrIntent);
 				AnimationUtil
-						.activityZoomAnimation(BuslineListViewParallel.this);
+						.activityZoomAnimation(BuslineListActivity.this);
 				break;
 			case R.id.lLayout_refresh:
 				// showLoading();
@@ -1147,7 +1147,7 @@ public class BuslineListViewParallel extends BaseActivity {
 			// TODO Auto-generated method stub
 			Log.d(TAG, "onPostExecute");
 			if (result == null) {
-				Toast.makeText(BuslineListViewParallel.this, "对不起，没有反方向线路!",
+				Toast.makeText(getApplicationContext(), "对不起，没有反方向线路!",
 						Toast.LENGTH_SHORT).show();
 				dismissLoading();
 				return;

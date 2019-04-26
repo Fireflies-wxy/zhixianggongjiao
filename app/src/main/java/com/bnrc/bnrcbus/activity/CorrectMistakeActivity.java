@@ -117,7 +117,7 @@ public class CorrectMistakeActivity extends BaseActivity {
 //			intent.putExtra("MistakeName", mistakeName);
 //			startActivity(intent);
 //			AnimationUtil.activityZoomAnimation(CorrectMistakeActivity.this);
-			Toast.makeText(CorrectMistakeActivity.this,"Report mistake",Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(),"Report mistake",Toast.LENGTH_SHORT).show();
 		}
 	};
 

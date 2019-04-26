@@ -1,16 +1,8 @@
 package com.bnrc.bnrcbus.view.fragment.home;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,23 +11,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 
 
 import com.bnrc.bnrcbus.R;
-import com.bnrc.bnrcbus.activity.SearchBuslineView;
-import com.bnrc.bnrcbus.activity.SettingView;
 import com.bnrc.bnrcbus.adapter.IPopWindowListener;
-import com.bnrc.bnrcbus.adapter.MyListViewAdapter;
 import com.bnrc.bnrcbus.constant.Constants;
 import com.bnrc.bnrcbus.service.PollingService;
 import com.bnrc.bnrcbus.ui.AllConcernFragSwipe;
@@ -45,17 +28,12 @@ import com.bnrc.bnrcbus.ui.WorkFragSwipe;
 import com.bnrc.bnrcbus.util.PollingUtils;
 import com.bnrc.bnrcbus.util.ScanService;
 import com.bnrc.bnrcbus.util.ServiceUtils;
-import com.bnrc.bnrcbus.util.database.DataBaseHelper;
 import com.bnrc.bnrcbus.util.database.UserDataDBHelper;
 import com.bnrc.bnrcbus.view.fragment.BaseFragment;
 import com.bnrc.bnrcbus.view.fragment.SegmentedGroup;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by apple on 2018/6/4.

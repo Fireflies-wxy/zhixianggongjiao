@@ -2,7 +2,6 @@ package com.bnrc.bnrcbus.view.fragment.home;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.SQLException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,15 +11,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,9 +23,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.bnrc.bnrcbus.R;
-import com.bnrc.bnrcbus.activity.BuslineListViewParallel;
-import com.bnrc.bnrcbus.activity.SearchBuslineView;
-import com.bnrc.bnrcbus.activity.StationListView;
 import com.bnrc.bnrcbus.adapter.IPopWindowListener;
 import com.bnrc.bnrcbus.adapter.NearAdapter;
 import com.bnrc.bnrcbus.constant.Constants;
@@ -39,24 +30,19 @@ import com.bnrc.bnrcbus.module.bus.BusModel;
 import com.bnrc.bnrcbus.module.bus.ErrorBusModel;
 import com.bnrc.bnrcbus.module.rtBus.Child;
 import com.bnrc.bnrcbus.module.rtBus.Group;
-import com.bnrc.bnrcbus.module.version.VersionModel;
 import com.bnrc.bnrcbus.network.MyVolley;
-import com.bnrc.bnrcbus.network.RequestCenter;
 import com.bnrc.bnrcbus.network.VolleyNetwork;
 import com.bnrc.bnrcbus.util.LocationUtil;
 import com.bnrc.bnrcbus.util.MyCipher;
 import com.bnrc.bnrcbus.util.NetAndGpsUtil;
 import com.bnrc.bnrcbus.util.database.PCDataBaseHelper;
 import com.bnrc.bnrcbus.view.fragment.BaseFragment;
-import com.bnrc.bnrcsdk.okhttp.listener.DisposeDataListener;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenu;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuCreator;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuExpandableListView;
 import com.bnrc.bnrcsdk.ui.expandablelistview.SwipeMenuItem;
-import com.bnrc.bnrcsdk.ui.pullloadmenulistciew.IPullRefresh;
-import com.bnrc.bnrcsdk.ui.pullloadmenulistciew.PullLoadMenuListView;
-import com.bnrc.bnrcsdk.util.AnimationUtil;
-import com.bnrc.bnrcsdk.util.BnrcLog;
+import com.bnrc.bnrcsdk.ui.pullloadmenulistview.IPullRefresh;
+import com.bnrc.bnrcsdk.ui.pullloadmenulistview.PullLoadMenuListView;
 
 import com.bnrc.bnrcbus.network.VolleyNetwork.*;
 
@@ -253,7 +239,7 @@ public class NearFragment extends BaseFragment{
                         if (addr != null && addr.length() > 0)
                             position = addr;
                     }
-                    Toast.makeText(mContext, position, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext.getApplicationContext(), position, Toast.LENGTH_SHORT).show();
                     mNearExplistview.stopRefresh();
                 }
             }, 1000);
@@ -1133,7 +1119,6 @@ public class NearFragment extends BaseFragment{
                     position = addr;
             }
             Log.i("Test position",position);
-            //Toast.makeText(mContext, position, Toast.LENGTH_SHORT).show();
         }
 
     }

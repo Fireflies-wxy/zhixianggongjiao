@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
-            android:text="附近搜索"
+            android:text="站点/线路搜索"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </RelativeLayout>
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:hint="搜索周边任意地点/站点/线路"
+                android:hint="搜索周边任意站点/线路"
                 android:paddingLeft="40dp"
                 android:singleLine="true"
                 android:textSize="18dp"

@@ -7,6 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 
 import com.bnrc.bnrcbus.R;
 import com.bnrc.bnrcbus.constant.Constants;
@@ -16,6 +17,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private LoadingDialog mLoading;
     private Intent mAlertIntent, mScanWifiIntent;
+    public LayoutInflater mInflater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -34,7 +34,7 @@
 
         <TextView
             android:id="@+id/tv_rtstation"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/iv_sequence"
@@ -45,6 +45,15 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
 
+        <ImageView
+            android:id="@+id/img_waitStatus"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/wait_status_high"
+            android:layout_toRightOf="@id/tv_rtstation"/>
+
         <TextView
             android:id="@+id/tv_arrive"
             android:layout_width="wrap_content"
@@ -54,7 +63,7 @@
             android:layout_marginRight="20dp"
             android:alpha="0.8"
             android:contentDescription="@null"
-            android:text="到这里去"
+            android:text="添加提醒"
             android:textColor="@color/colorPrimary"
             android:textSize="16sp" />
     </RelativeLayout>

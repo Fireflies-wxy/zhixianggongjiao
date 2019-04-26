@@ -24,12 +24,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.mapapi.model.LatLng;
 import com.bnrc.bnrcbus.R;
-import com.bnrc.bnrcbus.activity.BuslineListViewParallel;
-import com.bnrc.bnrcbus.activity.StationListView;
+import com.bnrc.bnrcbus.activity.BuslineListActivity;
+import com.bnrc.bnrcbus.activity.StationListActivity;
 import com.bnrc.bnrcbus.module.rtBus.Child;
 import com.bnrc.bnrcbus.module.rtBus.Group;
 import com.bnrc.bnrcbus.util.LocationUtil;
@@ -127,8 +128,7 @@ public class NearAdapter extends BaseExpandableListAdapter {
 			holder.fixButton = (TextView) convertView
 					.findViewById(R.id.btn_delete);
 			holder.frontView = convertView.findViewById(R.id.id_front);
-			holder.img_carStatus = convertView.findViewById(R.id.iv_bus);
-			holder.img_waitStatus = convertView.findViewById(R.id.img_waitStatus);
+			holder.img_carStatus = convertView.findViewById(R.id.img_carStatus);
 			convertView.setTag(holder);
 
 		} else {
@@ -245,7 +245,7 @@ public class NearAdapter extends BaseExpandableListAdapter {
 					// TODO Auto-generated method stub
 					Group group = groups.get(groupPosition);
 					Child child = group.getChildItem(childPosition);
-					Intent intent = new Intent(mContext, BuslineListViewParallel.class);
+					Intent intent = new Intent(mContext, BuslineListActivity.class);
 					intent.putExtra("LineID", child.getLineID());
 					intent.putExtra("StationID", child.getStationID());
 					intent.putExtra("FullName", child.getLineFullName());
@@ -255,6 +255,7 @@ public class NearAdapter extends BaseExpandableListAdapter {
 					AnimationUtil.activityZoomAnimation((Activity) mContext);
 				}
 			});
+
 			int xToMove = DensityUtil.dip2px(mContext, 60);
 
 			final FrontViewToMove frontViewToMove = new FrontViewToMove(
@@ -297,31 +298,35 @@ public class NearAdapter extends BaseExpandableListAdapter {
 			});
 
 			int carStatusRate = child.getLineStatus();  //乘车拥挤度
-			int waitStatusRate = child.getStationStatus();  //候车拥挤度
 
             switch (carStatusRate){
                 case 1:
-                    holder.img_carStatus.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+                    holder.img_carStatus.setBackgroundResource(R.drawable.wait_status_low);
                     break;
                 case 2:
-                    holder.img_carStatus.setTextColor(mContext.getResources().getColor(R.color.color_fed952));
+					holder.img_carStatus.setBackgroundResource(R.drawable.wait_status_mid);
                     break;
                 case 3:
-                    holder.img_carStatus.setTextColor(mContext.getResources().getColor(R.color.color_ffff4444));
+					holder.img_carStatus.setBackgroundResource(R.drawable.wait_status_high);
                     break;
             }
 
-            switch (waitStatusRate){
-                case 1:
-                    holder.img_waitStatus.setBackgroundResource(R.drawable.wait_status_low);
-                    break;
-                case 2:
-                    holder.img_waitStatus.setBackgroundResource(R.drawable.wait_status_mid);
-                    break;
-                case 3:
-                    holder.img_waitStatus.setBackgroundResource(R.drawable.wait_status_high);
-                    break;
-            }
+            holder.img_carStatus.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+						switch (child.getLineStatus()){
+							case 1:
+								Toast.makeText(mContext.getApplicationContext(),"乘车拥挤度:舒适",Toast.LENGTH_SHORT).show();
+								break;
+							case 2:
+								Toast.makeText(mContext.getApplicationContext(),"乘车拥挤度：适中",Toast.LENGTH_SHORT).show();
+								break;
+							case 3:
+								Toast.makeText(mContext.getApplicationContext(),"乘车拥挤度；拥挤",Toast.LENGTH_SHORT).show();
+								break;
+						}
+				}
+			});
 
 		}
 	}
@@ -369,6 +374,7 @@ public class NearAdapter extends BaseExpandableListAdapter {
 					.findViewById(R.id.tv_arrive);
 			holder.rtStation = convertView
 					.findViewById(R.id.tv_rtstation);
+			holder.img_waitStatus = convertView.findViewById(R.id.img_waitStatus);
 			convertView.setTag(holder);
 		} else {
 			// view = createGroupView();
@@ -399,11 +405,42 @@ public class NearAdapter extends BaseExpandableListAdapter {
 				//疑似重复代码 启动StationListView的activity NearFragmentSwipe line 153
 				// TODO Auto-generated method stub
 				Intent stationIntent = new Intent(mContext,
-						StationListView.class);
+						StationListActivity.class);
 				stationIntent.putExtra("StationName", group.getStationName());
 				stationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				mContext.startActivity(stationIntent);
 				AnimationUtil.activityZoomAnimation(mContext);
+			}
+		});
+
+		int waitStatusRate = group.getStationStatus();  //乘车拥挤度
+
+		switch (waitStatusRate){
+			case 1:
+				holder.img_waitStatus.setBackgroundResource(R.drawable.wait_status_low);
+				break;
+			case 2:
+				holder.img_waitStatus.setBackgroundResource(R.drawable.wait_status_mid);
+				break;
+			case 3:
+				holder.img_waitStatus.setBackgroundResource(R.drawable.wait_status_high);
+				break;
+		}
+
+		holder.img_waitStatus.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				switch (group.getStationStatus()){
+					case 1:
+						Toast.makeText(mContext.getApplicationContext(),"候车拥挤度:舒适",Toast.LENGTH_SHORT).show();
+						break;
+					case 2:
+						Toast.makeText(mContext.getApplicationContext(),"候车拥挤度：适中",Toast.LENGTH_SHORT).show();
+						break;
+					case 3:
+						Toast.makeText(mContext.getApplicationContext(),"候车拥挤度；拥挤",Toast.LENGTH_SHORT).show();
+						break;
+				}
 			}
 		});
 		return convertView;
@@ -427,6 +464,7 @@ public class NearAdapter extends BaseExpandableListAdapter {
 		ImageView icon;
 		TextView rtStation;
 		TextView distance;
+		ImageView img_waitStatus;
 	}
 
 	class ChildViewHolder {
@@ -438,8 +476,7 @@ public class NearAdapter extends BaseExpandableListAdapter {
 		LinearLayout lLayoutContainer;
 		TextView fixButton; //
 		View frontView;
-		IconTextView img_carStatus;
-		ImageView img_waitStatus;
+		ImageView img_carStatus;
 	}
 
 	private String getSequence(int position) {

@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
-            android:text="等车来"
+            android:text="智享公交"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </RelativeLayout>
@@ -160,7 +160,7 @@
 
             <com.joanzapata.iconify.widget.IconTextView
                 android:id="@+id/buscircle_image_view"
-                android:text="{icon-buscircle}"
+                android:text="{icon-route}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
-                android:text="@string/status_image_view_text"
+                android:text="@string/route_image_view_text"
                 android:textSize="15sp"
                 android:textColor="@drawable/page_tab_text" />
 

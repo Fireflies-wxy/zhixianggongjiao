@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         LoginInfo info = (LoginInfo) responseObj;
                         Log.i(TAG, "onSuccess: "+info.token);
 
-                        Toast.makeText(LoginActivity.this,"登陆成功，跳转至首页",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"登陆成功，跳转至首页",Toast.LENGTH_SHORT).show();
                         Log.i(TAG, "登陆成功");
                         startActivity(new Intent(LoginActivity.this,
                                 HomeActivity.class));
@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onFailure(Object reasonObj) {
                         Log.i(TAG, "登陆失败"+username+" "+password);
-                        Toast.makeText(LoginActivity.this,"登陆失败",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"登陆失败",Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.icon_sign_in_sina:
                 Platform weibo = ShareSDK.getPlatform(SinaWeibo.NAME);
-                Toast.makeText(this,"微博登录",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"微博登录",Toast.LENGTH_SHORT).show();
                 authorize(weibo);
                 break;
         }
@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             plat.removeAccount(true);
 
-            Toast.makeText(this,"删除授权",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"删除授权",Toast.LENGTH_SHORT).show();
         }
 
         // true不使用SSO授权，false使用SSO授权

@@ -213,7 +213,7 @@ public class PinnedHeaderExpandableLocListView extends ExpandableListView
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				Toast.makeText(getContext(), "点击： " + groupPosition, 1000)
+				Toast.makeText(getContext().getApplicationContext(), "点击： " + groupPosition, 1000)
 						.show();
 			}
 		});

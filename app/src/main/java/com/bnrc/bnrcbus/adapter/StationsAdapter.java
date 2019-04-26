@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 
 import com.bnrc.bnrcbus.R;
-import com.bnrc.bnrcbus.activity.BuslineListViewParallel;
+import com.bnrc.bnrcbus.activity.BuslineListActivity;
 import com.bnrc.bnrcbus.module.rtBus.Child;
 import com.bnrc.bnrcbus.module.rtBus.Group;
 import com.bnrc.bnrcbus.util.Bean;
@@ -209,7 +209,7 @@ public class StationsAdapter extends BaseExpandableListAdapter {
 					// TODO Auto-generated method stub
 					Group group = groups.get(groupPosition);
 					Child child = group.getChildItem(childPosition);
-					Intent intent = new Intent(mContext, BuslineListViewParallel.class);
+					Intent intent = new Intent(mContext, BuslineListActivity.class);
 					intent.putExtra("LineID", child.getLineID());
 					intent.putExtra("StationID", child.getStationID());
 					intent.putExtra("FullName", child.getLineFullName());

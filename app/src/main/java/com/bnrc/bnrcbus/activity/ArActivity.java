@@ -269,7 +269,7 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
                 camera.startPreview();
                 arCamera.setCamera(camera);
             } catch (RuntimeException ex){
-                Toast.makeText(this, "Camera not found", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Camera not found", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -336,9 +336,9 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
                 // cannot get location
                 this.locationServiceAvailable = false;
                 if(!isNetworkEnabled)
-                    Toast.makeText(this,"无法获取定位信息，请检查网络连接是否打开。",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"无法获取定位信息，请检查网络连接是否打开。",Toast.LENGTH_LONG).show();
                 else if(!isGPSEnabled)
-                    Toast.makeText(this,"无法获取定位信息，请检查GPS是否打开。",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"无法获取定位信息，请检查GPS是否打开。",Toast.LENGTH_LONG).show();
             }
 
             mLocationClient = new LocationClient(getApplicationContext());
@@ -394,7 +394,7 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onGetPoiResult(PoiResult poiResult) {
         if (poiResult == null || poiResult.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(this, "抱歉，未找到结果", Toast.LENGTH_LONG)
+            Toast.makeText(getApplicationContext(), "抱歉，未找到结果", Toast.LENGTH_LONG)
                     .show();
             return;
         }else {
