@@ -5,6 +5,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import com.bnrc.bnrcbus.R;
 import com.bnrc.bnrcbus.module.user.LoginInfo;
 import com.bnrc.bnrcbus.module.user.RegisterInfo;
 import com.bnrc.bnrcbus.network.RequestCenter;
+import com.bnrc.bnrcbus.util.SharedPreferenceUtil;
 import com.bnrc.bnrcsdk.okhttp.listener.DisposeDataListener;
 
 import java.util.HashMap;
@@ -29,6 +31,7 @@ import cn.sharesdk.tencent.qq.QQ;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,PlatformActionListener{
     private static final String TAG = "LoginActivity";
+    private static SharedPreferenceUtil mSharePrefrenceUtil;
 
     private TextView btn_sign_in;
     private TextView tv_link_sign_up;
@@ -66,6 +69,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         et_username = findViewById(R.id.edit_sign_in_username);
         et_password= findViewById(R.id.edit_sign_in_password);
+
+        mSharePrefrenceUtil = SharedPreferenceUtil.getInstance(this);
     }
 
     @Override
@@ -74,25 +79,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_sign_in:
                 username = et_username.getText().toString().trim();
                 password = et_password.getText().toString().trim();
-                RequestCenter.login(username, password,new DisposeDataListener() {
-                    @Override
-                    public void onSuccess(Object responseObj) {
-                        LoginInfo info = (LoginInfo) responseObj;
-                        Log.i(TAG, "onSuccess: "+info.token);
+                if (!TextUtils.isEmpty(username) & !TextUtils.isEmpty(password)) {
 
-                        Toast.makeText(getApplicationContext(),"登陆成功，跳转至首页",Toast.LENGTH_SHORT).show();
-                        Log.i(TAG, "登陆成功");
-                        startActivity(new Intent(LoginActivity.this,
-                                HomeActivity.class));
+                    RequestCenter.login(username, password,new DisposeDataListener() {
+                        @Override
+                        public void onSuccess(Object responseObj) {
+                            LoginInfo info = (LoginInfo) responseObj;
 
-                    }
+                            if(info.errorcode == 0){
+                                Toast.makeText(getApplicationContext(),"登陆成功，跳转至首页",Toast.LENGTH_SHORT).show();
+                                Log.i(TAG, "登陆成功");
+                                mSharePrefrenceUtil.setKey("username",username);
+                                startActivity(new Intent(LoginActivity.this,
+                                        HomeActivity.class));
+                            }
 
-                    @Override
-                    public void onFailure(Object reasonObj) {
-                        Log.i(TAG, "登陆失败"+username+" "+password);
-                        Toast.makeText(getApplicationContext(),"登陆失败",Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onFailure(Object reasonObj) {
+                            Log.i(TAG, "登陆失败"+username+" "+password);
+                            Toast.makeText(getApplicationContext(),"登陆失败",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    Toast.makeText(this.getApplicationContext(), "输入框不能为空", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
             case R.id.tv_link_sign_up:
                 Intent registerIntent = new Intent(LoginActivity.this,

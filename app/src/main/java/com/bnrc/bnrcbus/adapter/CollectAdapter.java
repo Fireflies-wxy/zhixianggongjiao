@@ -307,7 +307,11 @@ public class CollectAdapter extends BaseExpandableListAdapter {
 			holder.title = (TextView) convertView
 					.findViewById(R.id.tv_rtstation);
 			holder.text = (TextView) convertView.findViewById(R.id.tv_arrive);
-
+			final Group group = groups.get(groupPosition);
+			holder.img_waitStatus = convertView.findViewById(R.id.img_waitStatus);
+			if(group.getStationName().equals("明光桥北")){
+				holder.img_waitStatus.setBackgroundResource(R.drawable.wait_status_mid);
+			}
 			convertView.setTag(holder);
 		} else {
 			holder = (GroupViewHolder) convertView.getTag();
@@ -372,6 +376,7 @@ public class CollectAdapter extends BaseExpandableListAdapter {
 		ImageView icon;
 		TextView text;
 		ImageView mStationSeq;
+		ImageView img_waitStatus;
 		TextView title;
 	}
 

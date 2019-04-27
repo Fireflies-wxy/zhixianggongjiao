@@ -17,21 +17,22 @@
         app:civ_border_color="@color/white"/>
 
     <TextView
-        android:id="@+id/username"
+        android:id="@+id/tv_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="fireflies_wxy@163.com"
+        android:text="username"
         android:layout_centerHorizontal="true"
         android:textColor="#FFF"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:visibility="invisible"/>
 
     <TextView
-        android:id="@+id/mail"
+        android:id="@+id/tv_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/username"
-        android:text="BNRC Fireflies"
+        android:layout_above="@id/tv_username"
+        android:text="未登录"
         android:layout_centerHorizontal="true"
         android:textColor="#FFF"
         android:textSize="14sp" />

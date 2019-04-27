@@ -16,7 +16,7 @@ public class Group implements Serializable {
 	private String[] LNs = {};
 	private String relations = "";
 	private String sameNameID = "";
-	private int stationStatus = 2; //候车拥挤度
+	private int stationStatus = 1; //候车拥挤度
 
 	public String getSameNameID() {
 		return sameNameID;

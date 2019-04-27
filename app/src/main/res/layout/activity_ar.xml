@@ -61,7 +61,8 @@
             android:padding="5dp"
             android:layout_marginLeft="15dp"
             android:layout_marginStart="15dp"
-            android:clickable="true"/>
+            android:clickable="true"
+            android:visibility="invisible"/>
 
         <RelativeLayout
             android:id="@+id/rl_ar"

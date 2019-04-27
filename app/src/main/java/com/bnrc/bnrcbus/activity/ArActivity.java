@@ -88,6 +88,8 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
     private RelativeLayout relativeLayout;
     private SortAdapter adapter = null;
 
+    private ImageView img_close;
+
 
     private SensorManager sensorManager;
     private final static int REQUEST_CAMERA_PERMISSIONS_CODE = 11;
@@ -118,6 +120,8 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
 
         menu_view_ar = findViewById(R.id.menu_view_ar);
         menu_view_ar.setOnClickListener(ArActivity.this);
+
+        img_close = findViewById(R.id.close_view_ar);
 
         arOverlayView = new AROverlayView(this,mARContainer);
 
@@ -451,6 +455,11 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
         switch (view.getId()){
             case R.id.menu_view_ar:
                 arOverlayView.startMove();
+                break;
+            case R.id.close_view_ar:
+                finish();
+                break;
+
         }
     }
 

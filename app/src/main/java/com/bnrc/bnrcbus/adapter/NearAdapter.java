@@ -311,6 +311,7 @@ public class NearAdapter extends BaseExpandableListAdapter {
                     break;
             }
 
+
             holder.img_carStatus.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -427,6 +428,10 @@ public class NearAdapter extends BaseExpandableListAdapter {
 				break;
 		}
 
+		if(group.getStationName().equals("明光桥北")){
+			holder.img_waitStatus.setBackgroundResource(R.drawable.wait_status_mid);
+		}
+
 		holder.img_waitStatus.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -443,6 +448,7 @@ public class NearAdapter extends BaseExpandableListAdapter {
 				}
 			}
 		});
+
 		return convertView;
 	}
 

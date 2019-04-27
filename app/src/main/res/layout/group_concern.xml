@@ -51,7 +51,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/wait_status_high"
+            android:background="@drawable/wait_status_low"
             android:layout_toRightOf="@id/tv_rtstation"/>
 
         <TextView

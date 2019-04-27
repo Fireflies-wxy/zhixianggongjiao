@@ -21,6 +21,7 @@ import com.bnrc.bnrcbus.adapter.IPopWindowListener;
 import com.bnrc.bnrcbus.constant.Constants;
 import com.bnrc.bnrcbus.module.rtBus.Child;
 import com.bnrc.bnrcbus.module.user.LoginInfo;
+import com.bnrc.bnrcbus.util.SharedPreferenceUtil;
 import com.bnrc.bnrcbus.util.database.PCUserDataDBHelper;
 import com.bnrc.bnrcbus.view.fragment.BaseFragment;
 import com.bnrc.bnrcbus.view.fragment.SelectPicPopupWindow;
@@ -44,6 +45,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
 
     private final static int REQUEST_CAMERA_PERMISSIONS_CODE = 11;
     public static final int REQUEST_LOCATION_PERMISSIONS_CODE = 0;
+    private static SharedPreferenceUtil mSharePrefrenceUtil;
 
     private FragmentManager fm;
     private List<BaseFragment> fragmentList = new ArrayList<BaseFragment>();
@@ -67,6 +69,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
     private TextView tv_ar;
     private TextView icon_buscircle,tv_buscircle;
     private TextView icon_message,tv_message;
+    private TextView tv_welcome,tv_username;
 
     private DrawerLayout mDrawerLayout;
     private IconTextView icon_menu;
@@ -80,6 +83,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
     private RelativeLayout mCanversLayout;// 阴影遮挡图层
     private SelectPicPopupWindow menuWindow;
     private PCUserDataDBHelper mUserDB = null;
+
+    //登录状态
+    private String isLogin;
 
 
     @Override
@@ -116,6 +122,20 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
 
         user_icon = findViewById(R.id.icon_user);
         user_icon.setOnClickListener(this);
+
+        tv_welcome = findViewById(R.id.tv_welcome);
+        tv_username = findViewById(R.id.tv_username);
+
+        mSharePrefrenceUtil = SharedPreferenceUtil.getInstance(this);
+        isLogin = mSharePrefrenceUtil.getValue("isLogin","true");
+
+        if(isLogin.equals("true")){
+            tv_welcome.setText("欢迎您");
+            tv_username.setVisibility(View.VISIBLE);
+            tv_username.setText(mSharePrefrenceUtil.getValue("username","unknown"));
+        }else{
+            tv_welcome.setText("未登录");
+        }
 
         icon_share = findViewById(R.id.share_image_view);
         icon_share.setOnClickListener(this);
@@ -214,6 +234,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
                 startActivity(loginIntent);
                 break;
             case R.id.share_image_view:
+                mSharePrefrenceUtil.setKey("isLogin","false");
+                onCreate(null);
 //                showShare();
 
         }
