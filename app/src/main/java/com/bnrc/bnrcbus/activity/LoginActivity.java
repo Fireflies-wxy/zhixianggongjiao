@@ -85,11 +85,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         @Override
                         public void onSuccess(Object responseObj) {
                             LoginInfo info = (LoginInfo) responseObj;
-
-                            if(info.errorcode == 0){
+                            if(info.errorCode == 40002){
+                                Toast.makeText(getApplicationContext(),"用户名或密码错误。",Toast.LENGTH_SHORT).show();
+                            }else{
                                 Toast.makeText(getApplicationContext(),"登陆成功，跳转至首页",Toast.LENGTH_SHORT).show();
                                 Log.i(TAG, "登陆成功");
                                 mSharePrefrenceUtil.setKey("username",username);
+                                mSharePrefrenceUtil.setKey("isLogin","true");
                                 startActivity(new Intent(LoginActivity.this,
                                         HomeActivity.class));
                             }

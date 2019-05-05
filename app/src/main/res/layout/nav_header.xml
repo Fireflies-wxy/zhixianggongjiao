@@ -38,7 +38,7 @@
         android:textSize="14sp" />
 
     <com.joanzapata.iconify.widget.IconTextView
-        android:id="@+id/share_image_view"
+        android:id="@+id/quit_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -48,6 +48,7 @@
         android:textColor="@color/white"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:visibility="gone"/>
 
 </RelativeLayout>

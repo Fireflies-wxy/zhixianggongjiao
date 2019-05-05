@@ -56,9 +56,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 password = et_password.getText().toString().trim();
                 repassword = et_repearpwd.getText().toString().trim();
                 if (!TextUtils.isEmpty(username) & !TextUtils.isEmpty(password)) {
-                    if(password!=repassword){
+                    if(!password.equals(repassword)){
                         Toast.makeText(this.getApplicationContext(), "两次输入密码不一致", Toast.LENGTH_SHORT).show();
-                    }else {
+                    }else{
                         RequestCenter.register(username, password,new DisposeDataListener() {
                             @Override
                             public void onSuccess(Object responseObj) {

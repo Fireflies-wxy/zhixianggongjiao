@@ -1,6 +1,8 @@
 package com.bnrc.bnrcbus.activity;
 
 import android.annotation.SuppressLint;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -20,7 +23,6 @@ import com.bnrc.bnrcbus.activity.base.BaseActivity;
 import com.bnrc.bnrcbus.adapter.IPopWindowListener;
 import com.bnrc.bnrcbus.constant.Constants;
 import com.bnrc.bnrcbus.module.rtBus.Child;
-import com.bnrc.bnrcbus.module.user.LoginInfo;
 import com.bnrc.bnrcbus.util.SharedPreferenceUtil;
 import com.bnrc.bnrcbus.util.database.PCUserDataDBHelper;
 import com.bnrc.bnrcbus.view.fragment.BaseFragment;
@@ -77,7 +79,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
     private CircleImageView user_icon;
 
     //分享图标
-    private TextView icon_share;
+    private TextView icon_quit;
 
     private Child mChild;
     private RelativeLayout mCanversLayout;// 阴影遮挡图层
@@ -126,19 +128,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
         tv_welcome = findViewById(R.id.tv_welcome);
         tv_username = findViewById(R.id.tv_username);
 
+        icon_quit = findViewById(R.id.quit_image_view);
+        icon_quit.setOnClickListener(this);
+
         mSharePrefrenceUtil = SharedPreferenceUtil.getInstance(this);
         isLogin = mSharePrefrenceUtil.getValue("isLogin","true");
 
         if(isLogin.equals("true")){
             tv_welcome.setText("欢迎您");
+            icon_quit.setVisibility(View.VISIBLE);
             tv_username.setVisibility(View.VISIBLE);
             tv_username.setText(mSharePrefrenceUtil.getValue("username","unknown"));
         }else{
             tv_welcome.setText("未登录");
         }
 
-        icon_share = findViewById(R.id.share_image_view);
-        icon_share.setOnClickListener(this);
+
     }
 
     private void initFragments(){
@@ -233,13 +238,34 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
                         LoginActivity.class);
                 startActivity(loginIntent);
                 break;
-            case R.id.share_image_view:
-                mSharePrefrenceUtil.setKey("isLogin","false");
-                onCreate(null);
+            case R.id.quit_image_view:
+                showQuitDialog();
 //                showShare();
 
         }
 
+    }
+
+    public void showQuitDialog(){
+        final AlertDialog.Builder quitDialog = new AlertDialog.Builder(HomeActivity.this);
+        quitDialog.setTitle("注销提醒");
+        quitDialog.setMessage("确定要退出登录么？");
+        quitDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mSharePrefrenceUtil.setKey("isLogin","false");
+                tv_username.setVisibility(View.INVISIBLE);
+                tv_welcome.setText("未登录");
+                icon_quit.setVisibility(View.GONE);
+            }
+        });
+        quitDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        quitDialog.show();
     }
 
     public void openDrawerLayout(View view){
