@@ -3,7 +3,7 @@ package com.bnrc.bnrcbus.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.bnrc.bnrcbus.activity.SettingView;
+import com.bnrc.bnrcbus.activity.SettingActivity;
 
 
 public class SharePrefrenceUtil {
@@ -25,7 +25,7 @@ public class SharePrefrenceUtil {
 
 	public void setKey(String key, String value) {
 		mPreferences = mContext.getSharedPreferences(category,
-				SettingView.MODE_PRIVATE);
+				SettingActivity.MODE_PRIVATE);
 		mEditor = mPreferences.edit();
 		mEditor.putString(key, value);
 		mEditor.commit();
@@ -33,7 +33,7 @@ public class SharePrefrenceUtil {
 
 	public String getValue(String key, String defaultString) {
 		mPreferences = mContext.getSharedPreferences(category,
-				SettingView.MODE_PRIVATE);
+				SettingActivity.MODE_PRIVATE);
 		String value = mPreferences.getString(key, defaultString);
 		return value;
 	}

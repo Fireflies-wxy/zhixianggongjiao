@@ -5,6 +5,7 @@
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="yellow">#F3C204</color>
 
     <color name="mycenter_upload_video_upload_btn_bg">#ebebeb</color>
     <color name="actionbar_menu_bg">#f6f6f6</color>

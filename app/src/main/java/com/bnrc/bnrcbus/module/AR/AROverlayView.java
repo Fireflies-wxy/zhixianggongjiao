@@ -67,7 +67,7 @@ public class AROverlayView extends View {
     public void updatePoiResult(PoiResult poiResult){
         for(PoiInfo poi:poiResult.getAllPoi()){
             if(!arPoints.contains(poi))
-                arPoints.add(new ARPoint(poi.getName(),(int)DistanceUtil.getDistance(
+                arPoints.add(new ARPoint(poi.name,(int)DistanceUtil.getDistance(
                         new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()),
                         new LatLng(poi.location.latitude,poi.location.longitude)
                                 )+"m",poi.location.latitude,poi.location.longitude,0));

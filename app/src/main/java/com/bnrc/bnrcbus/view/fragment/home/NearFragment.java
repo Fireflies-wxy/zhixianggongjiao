@@ -1,7 +1,9 @@
 package com.bnrc.bnrcbus.view.fragment.home;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.SQLException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,8 +15,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,6 +108,8 @@ public class NearFragment extends BaseFragment{
     private TextView text_near;
     private String ErrorBusURL;
 
+    private ProgressDialog progressDialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,9 +164,47 @@ public class NearFragment extends BaseFragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContentView = inflater.inflate(R.layout.fragment_near,container,false);
 
-        initUtils(); //初始化各种工具
+        mContext = getActivity();
 
-        initView(); //初始化视图
+		mLocationUtil = LocationUtil.getInstance(mContext
+				.getApplicationContext());
+		mLocationUtil.startLocation();
+		mBDLocation = mLocationUtil.getmLocation();
+
+		if (mBDLocation != null)
+			mOldPoint = new LatLng(mBDLocation.getLatitude(),
+					mBDLocation.getLongitude());
+
+
+		mVolleyNetwork = VolleyNetwork.getInstance(mContext);
+
+		mNetAndGpsUtil = NetAndGpsUtil.getInstance(mContext
+				.getApplicationContext());
+		mNearExplistview = (PullLoadMenuListView) mContentView
+				.findViewById(R.id.explistview_near);
+		mNearHint = (RelativeLayout) mContentView.findViewById(R.id.rLayout_near);
+		mNearGroups = new ArrayList<Group>();
+		mNearGroups = Collections.synchronizedList(mNearGroups);
+		mNearAdapter = new NearAdapter(mNearGroups, mContext,
+				mNearExplistview.listView, mChooseListener);
+		mNearExplistview.setAdapter(mNearAdapter);
+		mNearExplistview.setMenuCreator(mMenuCreator);
+
+		mNearExplistview.setPullToRefreshEnable(true);
+		mNearExplistview
+				.setPullRefreshListener(new IPullRefresh.PullRefreshListener() {
+
+					@Override
+					public void onRefresh() {
+						// TODO Auto-generated method stub
+						MyVolley.sharedVolley(mContext.getApplicationContext())
+								.reStart();
+						pullToRefresh();
+					}
+				});
+
+		Log.i(TAG, TAG + " onCreateView");
+		mCoordConventer = new CoordinateConverter();
 
         loadDataBase();
 
@@ -166,7 +212,6 @@ public class NearFragment extends BaseFragment{
     }
 
     public void initUtils(){
-        mVolleyNetwork = VolleyNetwork.getInstance(mContext);
 
         if(hasPermission(Constants.ACCESS_LOCATION_PERMISSION)){
             mLocationUtil = LocationUtil.getInstance(mContext
@@ -181,6 +226,8 @@ public class NearFragment extends BaseFragment{
             requestPermission(Constants.ACCESS_LOCATION_CODE,Constants.ACCESS_LOCATION_PERMISSION);
         }
 
+		mVolleyNetwork = VolleyNetwork.getInstance(mContext);
+
         mNetAndGpsUtil = NetAndGpsUtil.getInstance(mContext
                 .getApplicationContext());
 
@@ -190,6 +237,9 @@ public class NearFragment extends BaseFragment{
     }
 
     public void initView(){
+
+//    	buildProgressDialog("定位中，请稍后...");
+
         mNearExplistview = mContentView
                 .findViewById(R.id.explistview_near);
         mNearHint = mContentView.findViewById(R.id.rLayout_near);
@@ -214,39 +264,65 @@ public class NearFragment extends BaseFragment{
                         pullToRefresh();
                     }
                 });
+
     }
+
+	/**
+	 * 加载框
+	 */
+	public void buildProgressDialog(String str) {
+		if (progressDialog == null) {
+			progressDialog = new ProgressDialog(mContext);
+			progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		}
+		progressDialog.setMessage(str);
+		progressDialog.setCancelable(true);
+		progressDialog.show();
+	}
+
+	/**
+	 * @Description: TODO 取消加载框
+	 */
+	public void cancelProgressDialog() {
+		if (progressDialog != null)
+			if (progressDialog.isShowing()) {
+				progressDialog.dismiss();
+			}
+
+	}
 
     private void loadDataBase() {
         if (mTask != null)
             mTask.cancel(true);
         mTask = new DownloadTask(getActivity());
         mTask.execute();
-
     }
 
-    private void pullToRefresh() {   //下拉刷新
-        Log.d("Test pullToRefresh", "测试刷新");
-        if (checkPositionChange())   //位置改变之后，重载数据库
-            loadDataBase();
-        else {
-            mHandler.postDelayed(new Runnable() {
+	private void pullToRefresh() {   //下拉刷新
+		Log.i(TAG, "测试刷新");
+		if (checkPositionChange())   //位置改变之后，重载数据库
+			loadDataBase();
+		else {
+			mHandler.postDelayed(new Runnable() {
 
-                @Override
-                public void run() {
-                    String position = "暂时没有定位信息";
-                    if (mBDLocation != null) {
-                        String addr = mBDLocation.getAddrStr();
-                        if (addr != null && addr.length() > 0)
-                            position = addr;
-                    }
-                    Toast.makeText(mContext.getApplicationContext(), position, Toast.LENGTH_SHORT).show();
-                    mNearExplistview.stopRefresh();
-                }
-            }, 1000);
-            getServerInfo(mNearGroups);
-        }
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					String position = "暂时没有定位信息";
+					if (mBDLocation != null) {
+						String addr = mBDLocation.getAddrStr();
+						if (addr != null && addr.length() > 0)
+							position = addr;
+					}
+					Toast.makeText(mContext, position, Toast.LENGTH_SHORT)
+							.show();
+					mNearExplistview.stopRefresh();
+				}
+			}, 3000);
+			getServerInfo(mNearGroups);
+		}
 
-    }
+	}
 
     private boolean checkPositionChange() {
         // LatLng newPoint = new LatLng(mBDLocation.getLatitude(),
@@ -280,6 +356,7 @@ public class NearFragment extends BaseFragment{
         if (mBDLocation != null) {
             LatLng newPoint = new LatLng(mBDLocation.getLatitude(),
                     mBDLocation.getLongitude());
+
             Log.i("mBDLocation: ",mBDLocation.getLatitude()+" "+mBDLocation.getLongitude());
             mNearGroups = PCDataBaseHelper.getInstance(
                     mContext.getApplicationContext()).acquireStationAndBusline(  //关键点！
@@ -508,6 +585,9 @@ public class NearFragment extends BaseFragment{
 		// 创建一个Request
 		final Request request = new Request.Builder().url(Url).build();
 		// new call
+		if(mOkHttpClient==null){
+			mOkHttpClient = new OkHttpClient();
+		}
 		Call call = mOkHttpClient.newCall(request);
 		// 请求加入调度
 		call.enqueue(new Callback() {
@@ -640,6 +720,9 @@ public class NearFragment extends BaseFragment{
 				.url(url).build();
 		final List<Map<String, ?>> tmp = child.getRtInfoList();
 		// new call
+		if(mOkHttpClient==null){
+			mOkHttpClient = new OkHttpClient();
+		}
 		Call call = mOkHttpClient.newCall(request);
 		// 请求加入调度
 		call.enqueue(new Callback() {
@@ -1038,12 +1121,8 @@ public class NearFragment extends BaseFragment{
     public void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
+//		loadDataBase();
         Log.i(TAG, TAG + " onResume");
-        loadDataBase();
-        //mSearchEdt.clearFocus();
-        //InputMethodManager imm = (InputMethodManager) mContext
-                //.getSystemService(Context.INPUT_METHOD_SERVICE);
-        //imm.hideSoftInputFromWindow(mSearchEdt.getWindowToken(), 0);
     }
 
     @Override
@@ -1054,73 +1133,118 @@ public class NearFragment extends BaseFragment{
         if (mTask != null) {
             mTask.cancel(true); // 如果Task还在运行，则先取消它
         }
-        //mChooseListener.dismissLoading();
+        mChooseListener.dismissLoading();
         mHandler.removeCallbacksAndMessages(null);
     }
 
-    class DownloadTask extends AsyncTask<Integer, Integer, List<Group>> {
-        // 后面尖括号内分别是参数（线程休息时间），进度(publishProgress用到)，返回值 类型
+	class DownloadTask extends AsyncTask<Integer, Integer, List<Group>> {
+		// 后面尖括号内分别是参数（线程休息时间），进度(publishProgress用到)，返回值 类型
 
-        private Context mContext = null;
+		private Context mContext = null;
 
-        public DownloadTask(Context context) {
-            this.mContext = context;
-        }
+		public DownloadTask(Context context) {
+			this.mContext = context;
+		}
 
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            Log.d(TAG, "onPreExecute");
-            super.onPreExecute();
-            //mChooseListener.showLoading();
+		/*
+		 * 第一个执行的方法 执行时机：在执行实际的后台操作前，被UI 线程调用
+		 * 作用：可以在该方法中做一些准备工作，如在界面上显示一个进度条，或者一些控件的实例化，这个方法可以不用实现。
+		 *
+		 * @see android.os.AsyncTask#onPreExecute()
+		 */
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			Log.i(TAG, "onPreExecute");
+			super.onPreExecute();
+//			mChooseListener.showLoading();
+			buildProgressDialog("加载中...");
 
-        }
-        @Override
-        protected List<Group> doInBackground(Integer... params) {
-            Log.d(TAG, "doInBackground");
-            publishProgress();
-            List<Group> llist = getNearbyStationsAndBuslines();
-            return llist;
-        }
+		}
 
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            Log.d(TAG, "onProgressUpdate");
-            super.onProgressUpdate(values);
-        }
+		/*
+		 * 执行时机：在onPreExecute 方法执行后马上执行，该方法运行在后台线程中 作用：主要负责执行那些很耗时的后台处理工作。可以调用
+		 * publishProgress方法来更新实时的任务进度。该方法是抽象方法，子类必须实现。
+		 *
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
+		@Override
+		protected List<Group> doInBackground(Integer... params) {
+			// TODO Auto-generated method stub
+			Log.i(TAG, "doInBackground");
+			// for (int i = 0; i <= 100; i++) {
+			// mProgressBar.setProgress(i);
+			publishProgress();
 
-        @Override
-        protected void onPostExecute(List<Group> result) {
-            Log.d(TAG, "onPostExecute");
-            mNearExplistview.stopRefresh();
-           // mChooseListener.dismissLoading();
-            if (result != null && result.size() > 0) {
-                mNearGroups = result;
-                mNearHint.setVisibility(View.GONE);
-                mNearExplistview.setVisibility(View.VISIBLE);
-                mNearAdapter.updateData(mNearGroups);
-                mNearAdapter.notifyDataSetChanged();
-                int groupCount = result.size() >= 3 ? 3 : result.size();
-                for (int i = 0; i < groupCount; i++) {
-                    Log.d(TAG, "mNearExplistview.setSelectedGroup(0);");
-                    mNearExplistview.expandGroup(i, false);
-                }
-                getServerInfo(mNearGroups);
-            } else {
-                mNearHint.setVisibility(View.VISIBLE);
-                mNearExplistview.setVisibility(View.GONE);
-            }
-            String position = "暂时没有定位信息";
-            Log.i("Test mBDLocation",String.valueOf(mBDLocation==null));
-            if (mBDLocation != null) {
-                String addr = mBDLocation.getAddrStr();
-                Log.i("Test addr","changed: "+addr);
-                if (addr != null && addr.length() > 0)
-                    position = addr;
-            }
-            Log.i("Test position",position);
-        }
+			// try {
+			// Thread.sleep(params[0]);
+			// } catch (InterruptedException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+			// }
+			List<Group> llist = getNearbyStationsAndBuslines();
+			return llist;
+		}
 
-    }
+		/*
+		 * 执行时机：这个函数在doInBackground调用publishProgress时被调用后，UI
+		 * 线程将调用这个方法.虽然此方法只有一个参数,但此参数是一个数组，可以用values[i]来调用
+		 * 作用：在界面上展示任务的进展情况，例如通过一个进度条进行展示。此实例中，该方法会被执行100次
+		 *
+		 * @see android.os.AsyncTask#onProgressUpdate(Progress[])
+		 */
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			// TODO Auto-generated method stub
+			Log.i(TAG, "onProgressUpdate");
+			// mTextView.setText(values[0] + "%");
+			// mChooseListener.onStartLoading();
+			super.onProgressUpdate(values);
+		}
+
+		/*
+		 * 执行时机：在doInBackground 执行完成后，将被UI 线程调用 作用：后台的计算结果将通过该方法传递到UI
+		 * 线程，并且在界面上展示给用户 result:上面doInBackground执行后的返回值，所以这里是"执行完毕"
+		 *
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		@Override
+		protected void onPostExecute(List<Group> result) {
+			// TODO Auto-generated method stub
+			Log.i(TAG, "onPostExecute");
+			mNearExplistview.stopRefresh();
+//			mChooseListener.dismissLoading();
+			cancelProgressDialog();
+			if (result != null && result.size() > 0) {
+				mNearGroups = result;
+				mNearHint.setVisibility(View.GONE);
+				mNearExplistview.setVisibility(View.VISIBLE);
+				mNearAdapter.updateData(mNearGroups);
+				mNearAdapter.notifyDataSetChanged();
+				int groupCount = result.size() >= 3 ? 3 : result.size();
+				for (int i = 0; i < groupCount; i++) {
+					Log.d(TAG, "mNearExplistview.setSelectedGroup(0);");
+					mNearExplistview.expandGroup(i, false);
+				}
+				// getRtParam(mNearGroups);
+				getServerInfo(mNearGroups);
+			} else {
+				mNearHint.setVisibility(View.VISIBLE);
+				mNearExplistview.setVisibility(View.GONE);
+			}
+			String position = "暂时没有定位信息";
+			Log.i("Test mBDLocation",String.valueOf(mBDLocation==null));
+			if (mBDLocation != null) {
+				String addr = mBDLocation.getAddrStr();
+				Log.i("Test addr","changed: "+addr);
+				if (addr != null && addr.length() > 0)
+					position = addr;
+			}
+			Log.i("Test position",position);
+			Toast.makeText(mContext.getApplicationContext(), position, Toast.LENGTH_SHORT).show();
+		}
+
+	}
 
 }

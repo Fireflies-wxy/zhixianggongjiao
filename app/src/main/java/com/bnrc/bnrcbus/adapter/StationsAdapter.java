@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.bnrc.bnrcbus.R;
 import com.bnrc.bnrcbus.activity.BuslineListActivity;
+import com.bnrc.bnrcbus.activity.StationRouteActivity;
 import com.bnrc.bnrcbus.module.rtBus.Child;
 import com.bnrc.bnrcbus.module.rtBus.Group;
 import com.bnrc.bnrcbus.util.Bean;
@@ -329,20 +330,20 @@ public class StationsAdapter extends BaseExpandableListAdapter {
 		Bean bean = new Bean(group.getSameNameID().toUpperCase());
 		holder.text.setVisibility(View.VISIBLE);
 		holder.text.setText("到这里去");
-//		holder.text.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				Intent intent = new Intent(mContext, StationRoutView.class);
-//				intent.putExtra("StationName", group.getStationName());
-//				intent.putExtra("Latitude", group.getLatitide());
-//				intent.putExtra("Longitude", group.getLongitude());
-//				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//				mContext.startActivity(intent);
-//				AnimationUtil.activityZoomAnimation(mContext);
-//			}
-//		});
+		holder.text.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(mContext, StationRouteActivity.class);
+				intent.putExtra("StationName", group.getStationName());
+				intent.putExtra("Latitude", group.getLatitide());
+				intent.putExtra("Longitude", group.getLongitude());
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				mContext.startActivity(intent);
+				AnimationUtil.activityZoomAnimation(mContext);
+			}
+		});
 		holder.mStationSeq.setImageDrawable(TextDrawable.builder().buildRound(
 				bean.name, mColor.getColor(bean.name, groupPosition)));
 		holder.mStationSeq.setVisibility(View.VISIBLE);

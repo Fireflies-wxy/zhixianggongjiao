@@ -73,13 +73,13 @@ public class HomeFragment extends BaseFragment {
         });
 
         mTitle = new ArrayList<>();
-        mTitle.add(getString(R.string.text_near));
         mTitle.add(getString(R.string.text_collect));
+        mTitle.add(getString(R.string.text_near));
         mTitle.add(getString(R.string.text_concern));
 
         mFragment = new ArrayList<>();
-        mFragment.add(new NearFragment());
         mFragment.add(new CollectFragment());
+        mFragment.add(new NearFragment());
         mFragment.add(new ConcernFragment());
 
         //设置适配器

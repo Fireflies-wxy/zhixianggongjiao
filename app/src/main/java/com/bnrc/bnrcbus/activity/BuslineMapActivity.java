@@ -45,7 +45,6 @@ import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
-import com.baidu.mapapi.search.poi.PoiDetailSearchResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
@@ -296,11 +295,6 @@ public class BuslineMapActivity extends BaseActivity implements
 
 	@Override
 	public void onGetPoiDetailResult(PoiDetailResult result) {
-
-	}
-
-	@Override
-	public void onGetPoiDetailResult(PoiDetailSearchResult poiDetailSearchResult) {
 
 	}
 

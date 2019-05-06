@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -133,27 +135,6 @@ public class StationListActivity extends BaseActivity implements IPopWindowListe
 		}
 	};
 
-	private SwipeMenuExpandableListView.OnChildClickListener mOnChildExpandListener = new SwipeMenuExpandableListView.OnChildClickListener() {
-
-		@Override
-		public boolean onChildClick(ExpandableListView paramExpandableListView,
-                                    View paramView, int paramInt1, int paramInt2, long paramLong) {
-			// TODO Auto-generated method stub
-			Group group = mGroups.get(paramInt1);
-			Child child = group.getChildItem(paramInt2);
-			Intent intent = new Intent(StationListActivity.this,
-					BuslineListActivity.class);
-			intent.putExtra("LineID", child.getLineID());
-			intent.putExtra("StationID", child.getStationID());
-			intent.putExtra("FullName", child.getLineFullName());
-			intent.putExtra("Sequence", child.getSequence());
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-			AnimationUtil.activityZoomAnimation(StationListActivity.this);
-			return false;
-		}
-
-	};
 	private SwipeMenuCreator mMenuCreator = new SwipeMenuCreator() {
 		@Override
 		public void create(SwipeMenu menu) {
@@ -183,23 +164,9 @@ public class StationListActivity extends BaseActivity implements IPopWindowListe
 			}
 		}
 	};
-	private SwipeMenuExpandableListView.OnMenuItemClickListener mMenuItemClickListener = new SwipeMenuExpandableListView.OnMenuItemClickListener() {
-		@Override
-		public boolean onMenuItemClick(int groupPosition, int childPosition,
-				SwipeMenu menu, int index) {
 
-			if (groupPosition < mGroups.size() && groupPosition >= 0) {
-				List<Child> children = mGroups.get(groupPosition).getChildren();
-				if (childPosition < children.size() && childPosition >= 0) {
-					Child child = children.get(childPosition);
-					onPopClick(child);
 
-				}
-			}
-			return false;
-		}
-	};
-
+	@RequiresApi(api = Build.VERSION_CODES.M)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -269,6 +236,28 @@ public class StationListActivity extends BaseActivity implements IPopWindowListe
 			}
 		});
 		mMapView.removeViewAt(2);
+
+		image_alert = findViewById(R.id.station_concern_view);
+		if (mUserDB.IsAlertStation(StationName)) {
+			image_alert.setBackgroundResource(R.drawable.icon_isalert);
+		} else {
+			image_alert.setBackgroundResource(R.drawable.icon_notalert);
+		}
+		image_alert.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (mGroups == null || mGroups.size() <= 0)
+					return;
+				Intent intent = new Intent(StationListActivity.this,
+						AlertSelectListActivity.class);
+				// Bundle bundle = new Bundle();
+				// bundle.putSerializable("DATA", (Serializable) mGroups);
+				// intent.putExtras(bundle);
+				intent.putExtra("StationName", StationName);
+				startActivity(intent);
+				AnimationUtil.activityZoomAnimation(StationListActivity.this);
+			}
+		});
 		mCoordConventer = new CoordinateConverter();
 	}
 
@@ -1312,7 +1301,6 @@ public class StationListActivity extends BaseActivity implements IPopWindowListe
 		}
 	}
 
-	private boolean isAlert = false;
 
 	private void initTitleRightLayout() {
 		//mAbTitleBar.clearRightView();
@@ -1320,40 +1308,12 @@ public class StationListActivity extends BaseActivity implements IPopWindowListe
 		View rightViewApp = LayoutInflater.from(StationListActivity.this).inflate(
 				R.layout.app_btn, null);
 
-		final Button appBtn = (Button) rightViewApp.findViewById(R.id.appBtn);
-
 		if (mUserDB.IsAlertStation(StationName)) {
-			appBtn.setBackgroundResource(R.drawable.icon_isalert);
-			isAlert = true;
+			image_alert.setBackgroundResource(R.drawable.icon_isalert);
 		} else {
-			appBtn.setBackgroundResource(R.drawable.icon_notalert);
-			isAlert = false;
+			image_alert.setBackgroundResource(R.drawable.icon_notalert);
 		}
-		appBtn.setTextColor(Color.WHITE);
-		appBtn.setPadding(25, 15, 25, 5);
-		appBtn.setTextSize(18);
 
-		//mAbTitleBar.addRightView(rightViewApp);
-
-		appBtn.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (mGroups == null || mGroups.size() <= 0)
-					return;
-				Intent intent = new Intent(StationListActivity.this,
-						AlertSelectListActivity.class);
-				// Bundle bundle = new Bundle();
-				// bundle.putSerializable("DATA", (Serializable) mGroups);
-				// intent.putExtras(bundle);
-				intent.putExtra("StationName", StationName);
-				startActivity(intent);
-				AnimationUtil.activityZoomAnimation(StationListActivity.this);
-			}
-
-		});
-
-		//MobclickAgent.updateOnlineConfig(this);
 	}
 
 	class loadDataBaseTask extends AsyncTask<Integer, Integer, List<Group>> {

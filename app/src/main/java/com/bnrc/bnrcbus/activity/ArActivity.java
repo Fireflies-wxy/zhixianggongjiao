@@ -42,7 +42,6 @@ import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
-import com.baidu.mapapi.search.poi.PoiDetailSearchResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiNearbySearchOption;
 import com.baidu.mapapi.search.poi.PoiResult;
@@ -68,7 +67,6 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
     private AROverlayView arOverlayView;
     private Camera camera;
     private ARCamera arCamera;
-    private TextView tvCurrentLocation;
     public LocationClient mLocationClient;
     private PoiSearch mSearch = null;
     private String keyword = "酒店";
@@ -84,7 +82,6 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
     //下拉菜单控件
     private ListPopupWindow listPopupWindow = null;
     private ImageView arrowImageView;
-    private TextView chooseText;
     private RelativeLayout relativeLayout;
     private SortAdapter adapter = null;
 
@@ -115,18 +112,23 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
-        tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
         mARContainer = findViewById(R.id.poiGroup_layout);
 
         menu_view_ar = findViewById(R.id.menu_view_ar);
         menu_view_ar.setOnClickListener(ArActivity.this);
 
-        img_close = findViewById(R.id.close_view_ar);
 
         arOverlayView = new AROverlayView(this,mARContainer);
 
         mSearch = PoiSearch.newInstance();
         mSearch.setOnGetPoiSearchResultListener(this);
+
+        findViewById(R.id.close_view_ar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     /**
@@ -137,7 +139,6 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
         relativeLayout = findViewById(R.id.rl_ar);
 
         arrowImageView = findViewById(R.id.poi_pick_arrow);
-        chooseText= findViewById(R.id.tv_ar_title);
 
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +167,6 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
                     Log.i("poiTag", "removed");
                     keyword = adapter.getItem(pos);
                     SearchPoi(keyword,bdLocation);
-                    chooseText.setText(keyword);
                     listPopupWindow.dismiss();
                 }
             });
@@ -378,8 +378,6 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
             Log.i("poiresultinfo", "update invoked ");
             SearchPoi(keyword,bdlocation);
 
-            tvCurrentLocation.setText(String.format("lat: %s \nlon: %s \naltitude: %s \n",
-                    bdlocation.getLatitude(), bdlocation.getLongitude(), bdlocation.getAltitude()));
         }
 
     }
@@ -403,7 +401,6 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
             return;
         }else {
             for(PoiInfo poi:poiResult.getAllPoi()){
-                Log.i("poiresultinfo", "onGetPoiResult: "+poi.getName()+" "+poi.getDistance());
             }
             if(arOverlayView!=null)
                 arOverlayView.updatePoiResult(poiResult);
@@ -415,11 +412,6 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
-
-    }
-
-    @Override
-    public void onGetPoiDetailResult(PoiDetailSearchResult poiDetailSearchResult) {
 
     }
 
@@ -455,9 +447,6 @@ public class ArActivity extends AppCompatActivity implements View.OnClickListene
         switch (view.getId()){
             case R.id.menu_view_ar:
                 arOverlayView.startMove();
-                break;
-            case R.id.close_view_ar:
-                finish();
                 break;
 
         }

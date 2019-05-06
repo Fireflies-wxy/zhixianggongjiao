@@ -29,6 +29,7 @@ import com.bnrc.bnrcbus.view.fragment.BaseFragment;
 import com.bnrc.bnrcbus.view.fragment.SelectPicPopupWindow;
 import com.bnrc.bnrcbus.view.fragment.home.RateFragment;
 import com.bnrc.bnrcbus.view.fragment.home.HomeFragment;
+import com.bnrc.bnrcbus.view.fragment.route.RouteFragment;
 import com.bnrc.bnrcsdk.ui.tabhost.RTabHost;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.bnrc.bnrcsdk.ui.circleimage.CircleImageView;
@@ -69,7 +70,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
     private TextView icon_route,tv_route;
     private CircleImageView icon_ar;
     private TextView tv_ar;
-    private TextView icon_buscircle,tv_buscircle;
     private TextView icon_message,tv_message;
     private TextView tv_welcome,tv_username;
 
@@ -80,6 +80,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
 
     //分享图标
     private TextView icon_quit;
+    private RelativeLayout rl_buscircle,rl_subway,rl_about,rl_setting,tv_feedback;
 
     private Child mChild;
     private RelativeLayout mCanversLayout;// 阴影遮挡图层
@@ -111,11 +112,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
 
         icon_home = findViewById(R.id.home_image_view);
         icon_ar = findViewById(R.id.ar_image_view);
-        icon_buscircle = findViewById(R.id.buscircle_image_view);
 
         tv_home = findViewById(R.id.home_tv_view);
         tv_ar = findViewById(R.id.ar_tv_view);
-        tv_buscircle = findViewById(R.id.buscircle_tv_view);
 
         tv_toolbar = findViewById(R.id.tv_home_title);//标题文字
 
@@ -127,6 +126,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
 
         tv_welcome = findViewById(R.id.tv_welcome);
         tv_username = findViewById(R.id.tv_username);
+
+        rl_buscircle = findViewById(R.id.menu_service);
+        rl_buscircle.setOnClickListener(this);
+        rl_subway = findViewById(R.id.menu_railway);
+        rl_subway.setOnClickListener(this);
+        rl_setting = findViewById(R.id.menu_setting);
+        rl_setting.setOnClickListener(this);
+//        tv_feedback = findViewById(R.id.tv_feedback);
+//        tv_feedback.setOnClickListener(this);
+        rl_about = findViewById(R.id.menu_about);
+        rl_about.setOnClickListener(this);
 
         icon_quit = findViewById(R.id.quit_image_view);
         icon_quit.setOnClickListener(this);
@@ -143,14 +153,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
             tv_welcome.setText("未登录");
         }
 
-
     }
 
     private void initFragments(){
         fragmentList.clear();
         classList = new ArrayList<>();
         classList.add(HomeFragment.class);
-        classList.add(RateFragment.class);
+        classList.add(RouteFragment.class);
 
         fm = getSupportFragmentManager();
         FragmentTransaction transcation = fm.beginTransaction();
@@ -240,6 +249,28 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,I
                 break;
             case R.id.quit_image_view:
                 showQuitDialog();
+                break;
+            case R.id.menu_service:
+                Intent circleIntent = new Intent(HomeActivity.this,
+                        BusCircleActivity.class);
+                startActivity(circleIntent);
+                break;
+            case R.id.menu_railway:
+                Intent subwayIntent = new Intent(HomeActivity.this,
+                        SubWayActivity.class);
+                startActivity(subwayIntent);
+                break;
+            case R.id.menu_setting:
+                Intent settingIntent = new Intent(HomeActivity.this,
+                        SettingActivity.class);
+                startActivity(settingIntent);
+                break;
+//                case R.id.tv_feedback:
+//                    break;
+            case R.id.menu_about:
+                Intent aboutInt = new Intent(HomeActivity.this, AboutActivity.class);
+                startActivity(aboutInt);
+                break;
 //                showShare();
 
         }

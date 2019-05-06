@@ -46,7 +46,6 @@
             android:layout_height="32dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/icon_notalert"
             android:padding="5dp"
             android:clickable="true" />
     </RelativeLayout>

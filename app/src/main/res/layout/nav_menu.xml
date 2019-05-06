@@ -39,6 +39,7 @@
 
 
             <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/tv_buscircle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="36dp"
@@ -60,6 +61,7 @@
 
 
             <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/tv_subway"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="36dp"
@@ -98,6 +100,7 @@
             android:orientation="horizontal" >
 
             <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/tv_setting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="36dp"
@@ -111,24 +114,25 @@
         </RelativeLayout>
 
 
-        <RelativeLayout
-            android:id="@+id/menu_advice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/menu_advice"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
 
-            <com.joanzapata.iconify.widget.IconTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="36dp"
-                android:gravity="center_vertical"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="{icon-modify} 建议反馈"
-                android:textColor="@color/color_666666"
-                android:textSize="18sp" />
+            <!--<com.joanzapata.iconify.widget.IconTextView-->
+                <!--android:id="@+id/tv_feedback"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="36dp"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:paddingBottom="10dp"-->
+                <!--android:paddingTop="10dp"-->
+                <!--android:text="{icon-modify} 建议反馈"-->
+                <!--android:textColor="@color/color_666666"-->
+                <!--android:textSize="18sp" />-->
 
-        </RelativeLayout>
+        <!--</RelativeLayout>-->
 
         <RelativeLayout
             android:id="@+id/menu_about"
@@ -138,6 +142,7 @@
             android:orientation="horizontal" >
 
             <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/tv_about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="36dp"
